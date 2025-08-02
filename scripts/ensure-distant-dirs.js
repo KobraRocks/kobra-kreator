@@ -1,4 +1,11 @@
-import { dirname, fromFileUrl, join, normalize, resolve, isAbsolute } from "https://deno.land/std@0.224.0/path/mod.ts";
+import {
+  dirname,
+  fromFileUrl,
+  isAbsolute,
+  join,
+  normalize,
+  resolve,
+} from "@std/path";
 
 /**
  * Walks each immediate subdirectory of `src/`, validates its `config.json`
@@ -13,7 +20,7 @@ async function main() {
   try {
     for await (const entry of Deno.readDir(srcDir)) {
       entries.push(entry);
-      console.log(`✅ DIR -- ${entry.name}`)
+      console.log(`✅ DIR -- ${entry.name}`);
     }
   } catch (err) {
     if (err instanceof Deno.errors.NotFound) {
