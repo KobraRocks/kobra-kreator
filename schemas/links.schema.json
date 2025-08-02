@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Kobra Kreator – links.json",
+  "type": "object",
+  "properties": {
+    "nav": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["href", "label"],
+        "oneOf": [
+          { "required": ["topLevel"], "not": { "required": ["subLevel"] } },
+          { "required": ["subLevel"], "not": { "required": ["topLevel"] } }
+        ],
+        "properties": {
+          "href":   { "type": "string" },
+          "label":  { "type": "string" },
+          "topLevel": { "type": "boolean" },
+          "subLevel": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "footer": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["href", "label", "column"],
+        "properties": {
+          "href":   { "type": "string" },
+          "label":  { "type": "string" },
+          "column": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

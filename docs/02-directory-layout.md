@@ -13,7 +13,7 @@ project-root/
 ├─ src/                                  # ← everything under here is watched
 │  ├─ my-domain.com/                     # one folder per domain
 │  │  ├─ index.html
-│  │  ├─ index.css                       # site‑wide stylesheet (optional)
+│  │  ├─ index.css                       # page specific stylesheet (optional)
 │  │  ├─ styles.css                      # extra global CSS (optional)
 │  │  ├─ js/                             # client‑side JS modules
 │  │  │  └─ …

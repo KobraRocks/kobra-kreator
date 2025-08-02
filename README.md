@@ -8,7 +8,7 @@
 
 | What you get                             | How it helps                                              |
 | ---------------------------------------- | --------------------------------------------------------- |
-| **Pure Deno** runtime & modules          | Zero Node.js tool‑chain, first‑class TypeScript support   |
+| **Pure Deno** runtime & modules          | Zero Node.js tool‑chain, first‑class javascript support   |
 | **Per‑domain folders** in `/src`         | Host multiple sites from one repo                         |
 | **Hot‑reload watcher**                   | Edits propagate instantly to your output directory        |
 | **Smart SVG tags** (`<icon>` / `<logo>`) | Drop SVGs straight into HTML and keep full CSS/JS control |
@@ -23,7 +23,7 @@
 curl -fsSL https://deno.land/install.sh | sh
 
 # 2 – Clone this repository
- git clone https://github.com/<your‑org>/kobra‑kreator.git
+ git clone https://github.com/KobraRocks/kobra‑kreator.git
  cd kobra‑kreator
 
 # 3 – Run the generator in watch mode

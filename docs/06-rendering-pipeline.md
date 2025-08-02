@@ -13,6 +13,7 @@ reacts to file‑system events raised by the watcher.
 
 ```mermaid
 %% TODO: replace with an SVG once the diagram is final
+%%{init: {'flowchart': {'htmlLabels': false}}}%%
 flowchart TD
     E[FS event] --> |HTML page changed| P1[Render‑Page]
     E --> |Template changed| P2[Render‑All‑Using‑Template]
@@ -48,9 +49,8 @@ flowchart TD
 
 * If the page’s front‑matter contains **any** `links.*` keys, merge them into
   the site’s `links.json`.
-* **Deduplication** – Two identical `href`/`label` pairs are collapsed.
-
-  <!-- TODO: specify whether we also dedupe by title slug or leave duplicates. -->
+* **Deduplication** – Two identical `href`/`label` pairs are collapsed if from the same source file. Else an error is thrown.
+>
 * The file is written back **only if** its in‑memory representation changed to
   avoid spurious disk writes.
 
@@ -137,7 +137,7 @@ available.
 * `--verbose` – Extra timing info per stage.
 * `--workers=<n>` – Override default worker count.
 
-<!-- TODO: update once the CLI is implemented in `main.ts`. -->
+<!-- TODO: update once the CLI is implemented in `main.js`. -->
 
 ---
 

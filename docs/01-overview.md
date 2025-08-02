@@ -58,7 +58,7 @@ flowchart TD
 | Hot‑reload watch       | ✅                                    | Uses `Deno.watchFs`. Debounce strategy described in 09‑watch‑rules. |
 | Custom head/footer/nav | ✅                                    | Via template modules.                                               |
 | Arbitrary page scripts | ✅                                    | `scripts.modules` & `scripts.inline` front‑matter arrays.           |
-| Markdown pages         | <!-- TODO: confirm future plan --> ❌ | Currently HTML‑only.                                                |
+| Markdown pages         | ❌ | Planned. Currently HTML‑only.                                                |
 
 ---
 

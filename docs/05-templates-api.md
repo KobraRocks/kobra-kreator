@@ -55,7 +55,7 @@ export function render({ frontMatter, links }) {
    * *Head* templates: emit raw tags (e.g. `<meta>`, `<link>`, `<script>`), **not**
      the `<head>` itself.
    * *Nav* / *Footer* templates: include the `<nav>` or `<footer>` element in the
-     output—you control its classes/ARIA attributes.  <!-- TODO: confirm wrapper rule for nav/footer. -->
+     output—you control its classes/ARIA attributes.  
 4. **Asset paths** – Use the same path rules described in
    [04-front‑matter](04-front-matter.md) (relative to site root or external
    URL).

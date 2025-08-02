@@ -11,6 +11,7 @@ them.
 
 | Item | Value |
 | ---- | ----- |
+| **Recommended Version** | 2.4.0 |
 | **Minimum version** | `1.46.0` <!-- TODO: bump when we rely on a newer API --> |
 | **Why this floor?** | Introduced <https://deno.land/api?s=Deno.watchFs> debounce fix and Worker `name` option we use for logging. |
 | **Tested on** | macOS 14, Windows 11, Ubuntu 22.04 |

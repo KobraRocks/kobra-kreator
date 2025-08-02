@@ -27,10 +27,10 @@ templates to render, and how to update `links.json`.
 | `[templates].nav`       | string    | ⬜        | File name under `templates/nav/`.                                                        |
 | `[templates].footer`    | string    | ⬜        | File name under `templates/footer/`.                                                     |
 | `[scripts].modules`     | string\[] | ⬜        | Added as `<script type="module" src="…">` *before* inline scripts.                       |
-| `[scripts].inline`      | string\[] | ⬜        | **Filename** to inline (**not** external URL) <!-- TODO: support raw JS string? -->      |
+| `[scripts].inline`      | string\[] | ⬜        | **Filename** to inline (**not** external URL)       |
 | `[links].nav.topLevel`  | bool      | ⬜        | If `true`, add to `links.json.nav` (top level).                                          |
 | `[links].nav.subLevel`  | string    | ⬜        | Name of submenu bucket to append under.                                                  |
-| `[links].nav.label`     | string    | ⬜        | Text shown in menu. Defaults to `title` if omitted. <!-- TODO: confirm default rule. --> |
+| `[links].nav.label`     | string    | ⬜        | Text shown in menu. Defaults to `title` if omitted. |
 | `[links].footer.column` | string    | ⬜        | Column bucket in `links.json.footer`.                                                    |
 | `[links].footer.label`  | string    | ⬜        | Link text in footer.                                                                     |
 
