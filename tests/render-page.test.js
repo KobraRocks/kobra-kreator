@@ -1,4 +1,5 @@
 import { renderPage } from "../lib/render-page.js";
+import { clearPageDeps, pageDeps } from "../lib/page-deps.js";
 import { join, toFileUrl } from "https://deno.land/std@0.224.0/path/mod.ts";
 import { DOMParser } from "jsr:@b-fuze/deno-dom@0.1.56";
 
@@ -12,6 +13,7 @@ function assertEquals(a, b) {
 }
 
 Deno.test("renderPage renders page and updates links", async () => {
+  clearPageDeps();
   const root = await Deno.makeTempDir();
   const rootUrl = toFileUrl(root + "/");
   const siteDir = join(root, "mysite");
@@ -84,4 +86,8 @@ Deno.test("renderPage renders page and updates links", async () => {
     label: "Home",
     topLevel: true,
   });
+
+  const deps = pageDeps.get(pagePath);
+  assertEquals(deps.templates.size, 3);
+  assert(deps.svgs.has(join(siteDir, "src-svg", "ui", "check.svg")));
 });
