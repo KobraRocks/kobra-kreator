@@ -1,8 +1,10 @@
 import { applyTemplates } from "../lib/apply-templates.js";
 
 function assertEquals(actual, expected) {
-  if (actual !== expected) {
-    throw new Error(`Assertion failed: expected ${expected}, got ${actual}`);
+  const da = JSON.stringify(actual);
+  const db = JSON.stringify(expected);
+  if (da !== db) {
+    throw new Error(`Assertion failed: expected ${db}, got ${da}`);
   }
 }
 
@@ -43,12 +45,21 @@ Deno.test("applyTemplates inserts rendered fragments", async () => {
   const links = { nav: [], footer: [] };
 
   const root = new URL("./", import.meta.url);
-  await applyTemplates(doc, frontMatter, links, root);
+  const used = await applyTemplates(doc, frontMatter, links, root);
 
   assertEquals(doc.head.innerHTML, "<title>Example</title>");
   assertEquals(
     doc.body.innerHTML,
     "<nav>nav</nav><main>hi</main><footer>foot</footer>",
   );
+  assertEquals(used.length, 3);
+  const endsWith = used.map((p) => p.slice(p.indexOf("templates")));
+  assertEquals(
+    endsWith.sort(),
+    [
+      "templates/footer/default.js",
+      "templates/head/default.js",
+      "templates/nav/default.js",
+    ].sort(),
+  );
 });
-
