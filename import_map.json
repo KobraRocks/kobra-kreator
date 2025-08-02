@@ -1,0 +1,11 @@
+{
+  "imports": {
+    "@std/path": "https://deno.land/std@0.224.0/path/mod.ts",
+    "@std/fs/walk": "https://deno.land/std@0.224.0/fs/walk.ts",
+    "@std/flags": "https://deno.land/std@0.224.0/flags/mod.ts",
+    "@std/assert": "https://deno.land/std@0.224.0/assert/mod.ts",
+    "@std/testing/mock": "https://deno.land/std@0.224.0/testing/mock.ts",
+    "@std/toml": "https://deno.land/std@0.224.0/toml/mod.ts",
+    "@b-fuze/deno-dom": "npm:linkedom"
+  }
+}

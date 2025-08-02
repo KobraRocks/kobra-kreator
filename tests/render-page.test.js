@@ -1,7 +1,7 @@
 import { renderPage } from "../lib/render-page.js";
 import { clearPageDeps, pageDeps } from "../lib/page-deps.js";
-import { join, toFileUrl } from "https://deno.land/std@0.224.0/path/mod.ts";
-import { DOMParser } from "jsr:@b-fuze/deno-dom@0.1.56";
+import { join, toFileUrl } from "@std/path";
+import { DOMParser } from "@b-fuze/deno-dom";
 
 function assert(cond, msg = "Assertion failed") {
   if (!cond) throw new Error(msg);
