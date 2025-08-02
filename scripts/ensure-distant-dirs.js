@@ -13,6 +13,7 @@ async function main() {
   try {
     for await (const entry of Deno.readDir(srcDir)) {
       entries.push(entry);
+      console.log(`✅ DIR -- ${entry.name}`)
     }
   } catch (err) {
     if (err instanceof Deno.errors.NotFound) {
@@ -37,8 +38,9 @@ async function main() {
     try {
       const text = await Deno.readTextFile(configPath);
       config = JSON.parse(text);
+      console.log(`✅ CONFIG -- ${dirent.name} `);
     } catch (err) {
-      console.warn(`Skipping ${dirent.name}: cannot read config.json`);
+      console.warn(`❌ Skipping ${dirent.name}: cannot read config.json`);
       continue;
     }
 
