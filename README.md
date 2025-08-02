@@ -34,6 +34,24 @@ curl -fsSL https://deno.land/install.sh | sh
 
 > **Tip:** The first run performs a full build, then keeps watching `/src` and `/templates` for changes.
 
+## CLI Usage 🧰
+
+Run the generator from the repository root with Deno:
+
+```bash
+deno run --allow-all main.js
+```
+
+By default, Kobra Kreator spawns a worker for each available CPU core. You can tweak the worker pool with `--workers` (or `-w`):
+
+```bash
+deno run --allow-all main.js --workers 4
+# or
+deno run --allow-all main.js -w 4
+```
+
+The CLI performs a full build and then continues watching `src/` for changes.
+
 ---
 
 ## Folder Layout 🗂️
