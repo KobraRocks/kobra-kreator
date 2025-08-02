@@ -27,7 +27,7 @@ curl -fsSL https://deno.land/install.sh | sh
  cd kobra‑kreator
 
 # 3 – Run the generator in watch mode
- deno run --allow-all main.js
+ deno run -A --import-map=import_map.json main.js
 
 # 4 – Open `dist/` (or the path you set in each site’s config.json) in your browser
 ```
