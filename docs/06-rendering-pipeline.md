@@ -40,34 +40,36 @@ flowchart TD
 
 ### 2.1 Parse front‑matter & HTML
 
-* Use [`TOMLParser`](https://deno.land/std/toml) to convert the header into an
+- Use [`TOMLParser`](https://deno.land/std/toml) to convert the header into an
   object.
-* HTML section is loaded into [https://deno.land/x/deno\_dom](https://deno.land/x/deno_dom)’s `DOMParser` for
-  subsequent manipulations.
+- HTML section is loaded into
+  [https://deno.land/x/deno\_dom](https://deno.land/x/deno_dom)’s `DOMParser`
+  for subsequent manipulations.
 
 ### 2.2 Update `links.json`
 
-* If the page’s front‑matter contains **any** `links.*` keys, merge them into
+- If the page’s front‑matter contains **any** `links.*` keys, merge them into
   the site’s `links.json`.
-* **Deduplication** – Two identical `href`/`label` pairs are collapsed if from the same source file. Else an error is thrown.
->
-* The file is written back **only if** its in‑memory representation changed to
+- **Deduplication** – Two identical `href`/`label` pairs are collapsed if from
+  the same source file. Else an error is thrown.
+
+- The file is written back **only if** its in‑memory representation changed to
   avoid spurious disk writes.
 
 ### 2.3 Apply templates
 
-* Resolve file path: `templates/<slot>/<name>.js`.
-* Import (cached by Deno) and call `render({ frontMatter, links })`.
-* For *head*: returned HTML is **prepended** inside a fresh `<head>` element.
-* For *nav* / *footer*: returned fragment is inserted **before** the content and
+- Resolve file path: `templates/<slot>/<name>.js`.
+- Import (cached by Deno) and call `render({ frontMatter, links })`.
+- For _head_: returned HTML is **prepended** inside a fresh `<head>` element.
+- For _nav_ / _footer_: returned fragment is inserted **before** the content and
   **after** it respectively.
 
 ### 2.4 Inject styles & scripts
 
 1. **CSS list** – Each entry becomes `<link rel="stylesheet" href="…">` inside
    `<head>`.
-2. **Module scripts** – Output `<script type="module" src="…">` *before*
-   inline scripts.
+2. **Module scripts** – Output `<script type="module" src="…">` _before_ inline
+   scripts.
 3. **Inline scripts** – The referenced file’s text is wrapped in
    `<script>(/* … */)</script>` and placed just before `</body>`.
 
@@ -75,32 +77,35 @@ flowchart TD
 
 ### 2.5 Assemble & inline SVGs
 
-* Combine head, nav, page content, footer, scripts into a DOM tree.
-* Replace each `<icon>` / `<logo>` node with SVG markup pulled from
-  `src-svg/`.
-* Remove unused whitespace if `--minify` flag is passed. <!-- TODO: implement minify option -->
+- Combine head, nav, page content, footer, scripts into a DOM tree.
+- Replace each `<icon>` / `<logo>` node with SVG markup pulled from `src-svg/`.
+- Remove unused whitespace if `--minify` flag is passed.
+  <!-- TODO: implement minify option -->
 
 ### 2.6 Write output
 
-* Compute destination: `<distantDirectory>/<relative/path/of/page>.html`.
-* Ensure folders exist (`Deno.mkdir({ recursive: true })`).
-* Write file with UTF‑8 encoding.
+- Compute destination: `<distantDirectory>/<relative/path/of/page>.html`.
+- Ensure folders exist (`Deno.mkdir({ recursive: true })`).
+- Write file with UTF‑8 encoding.
 
 ---
 
 ## 3. Dependency graph & smart invalidation
 
-To avoid re‑rendering *every* page on every change, Kobra Kreator maintains a
+To avoid re‑rendering _every_ page on every change, Kobra Kreator maintains a
 **dependency map** at runtime:
 
-| Dependency         | Recorded as                                |
-| ------------------ | ------------------------------------------ |
-| Page → template(s) | `pageDeps.templates = ["head/default", …]` |
-| Page → SVG(s) used | `pageDeps.svgs     = ["ui/check.svg", …]`  |
+| Dependency              | Recorded as                                   |
+| ----------------------- | --------------------------------------------- |
+| Page → template(s)      | `pageDeps.templates = ["head/default", …]`    |
+| Page → SVG(s) used      | `pageDeps.svgs     = ["ui/check.svg", …]`     |
+| Page → inline script(s) | `pageDeps.scripts  = ["inline.inline.js", …]` |
 
-* When a template changes, only pages whose `pageDeps.templates` contains that
+- When a template changes, only pages whose `pageDeps.templates` contains that
   template are re‑rendered.
-* When a file inside `src-svg/` changes, only pages referencing that SVG are
+- When a file inside `src-svg/` changes, only pages referencing that SVG are
+  re‑rendered.
+- When an inline script file changes, only pages referencing that script are
   re‑rendered.
 
 <!-- TODO: persist dependency map to disk to speed up cold start. -->
@@ -109,9 +114,10 @@ To avoid re‑rendering *every* page on every change, Kobra Kreator maintains a
 
 ## 4. Concurrency model
 
-* Rendering tasks are queued and run in **N worker threads** (default `N =
+- Rendering tasks are queued and run in **N worker threads** (default
+  `N =
   number of CPU cores`) using Deno’s worker API.
-* Each worker is **stateless**; the main thread coordinates disk writes to avoid
+- Each worker is **stateless**; the main thread coordinates disk writes to avoid
   race conditions on `links.json`.
 
 <!-- TODO: benchmark worker spawn cost vs. simple async pool. -->
@@ -133,13 +139,12 @@ available.
 
 ## 6. CLI flags (planned)
 
-* `--minify` – Collapse whitespace & inline `<style>`/`<script>` where possible.
-* `--verbose` – Extra timing info per stage.
-* `--workers=<n>` – Override default worker count.
+- `--minify` – Collapse whitespace & inline `<style>`/`<script>` where possible.
+- `--verbose` – Extra timing info per stage.
+- `--workers=<n>` – Override default worker count.
 
 <!-- TODO: update once the CLI is implemented in `main.js`. -->
 
 ---
 
 ### Next → [07-config-schema](07-config-schema.md)
-
