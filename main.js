@@ -1,3 +1,5 @@
+// deno -A --import-map=import_map.json main.js
+
 import { parse } from "@std/flags";
 import { walk } from "@std/fs/walk";
 import { watch } from "./lib/watch.js";
