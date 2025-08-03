@@ -53,7 +53,7 @@ Deno.test("renderPage supports prettyUrls", async () => {
   await renderPage(indexPath, rootUrl);
   await renderPage(aboutPath, rootUrl);
 
-  const aboutOut = join(distDir, "about", "index.html");
+  const aboutOut = join(distDir, "about.html");
   await Deno.readTextFile(aboutOut);
 
   const links = JSON.parse(
