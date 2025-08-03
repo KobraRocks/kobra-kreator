@@ -34,6 +34,8 @@ curl -fsSL https://deno.land/install.sh | sh
 
 > **Tip:** The first run performs a full build, then keeps watching `/src` and `/templates` for changes.
 
+Want to work with Codex? Follow this guideline to setup environment [Codex Environement](https://github.com/KobraRocks/knowledge-base/blob/main/codex-with-deno.md)
+
 ## CLI Usage 🧰
 
 Run the generator from the repository root with Deno:
