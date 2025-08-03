@@ -47,7 +47,7 @@ async function main() {
       const text = await Deno.readTextFile(configPath);
       config = JSON.parse(text);
       logWithEmoji("success", `CONFIG -- ${dirent.name} `);
-    } catch (err) {
+    } catch (_err) {
       console.warn(
         `${getEmoji("error")} Skipping ${dirent.name}: cannot read config.json`,
       );

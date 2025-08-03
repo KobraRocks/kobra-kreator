@@ -29,6 +29,9 @@ Deno.test("renderPage renders page and updates links", async () => {
     join(siteDir, "inline.inline.js"),
     "console.log('hi');",
   );
+  const inlineScriptPath = await Deno.realPath(
+    join(siteDir, "inline.inline.js"),
+  );
   await Deno.mkdir(join(siteDir, "src-svg", "ui"), { recursive: true });
   await Deno.writeTextFile(
     join(siteDir, "src-svg", "ui", "check.svg"),
@@ -64,7 +67,12 @@ Deno.test("renderPage renders page and updates links", async () => {
 
   const deps = await renderPage(pagePath, rootUrl);
   if (deps) {
-    recordPageDeps(deps.pagePath, deps.templatesUsed, deps.svgsUsed);
+    recordPageDeps(
+      deps.pagePath,
+      deps.templatesUsed,
+      deps.svgsUsed,
+      deps.scriptsUsed,
+    );
   }
 
   const outPath = join(distDir, "blog", "index.html");
@@ -101,4 +109,6 @@ Deno.test("renderPage renders page and updates links", async () => {
   const depRec = pageDeps.get(pagePath);
   assertEquals(depRec.templates.size, 3);
   assert(depRec.svgs.has(join(siteDir, "src-svg", "ui", "check.svg")));
+  assert(deps?.scriptsUsed.includes(inlineScriptPath));
+  assert(depRec.scripts.has(inlineScriptPath));
 });

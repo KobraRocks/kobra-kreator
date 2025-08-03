@@ -30,6 +30,7 @@ function createPool(size) {
           e.data.deps.pagePath,
           e.data.deps.templatesUsed,
           e.data.deps.svgsUsed,
+          e.data.deps.scriptsUsed,
         );
       }
       idle.push(w);
