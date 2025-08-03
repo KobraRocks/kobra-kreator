@@ -67,7 +67,7 @@ RAM blow-ups for big videos.
 
 | Feature                                    | Status      | Notes                                                                     |
 | ------------------------------------------ | ----------- | ------------------------------------------------------------------------- |
-| **Hash-based filenames** for cache busting | Planned     | Tied to `hashAssets` in _07-config-schema_.                               |
+| **Hash-based filenames** for cache busting | Done        | Enabled via `hashAssets` in _07-config-schema_.                           |
 | **Clean up deleted assets**                | Done        | Source removals delete corresponding output files.                        |
 | **Image optimisation (lossless)**          | Investigate | Could be opt-in plugin.                                                   |
 | **Symlink instead of copy** on same volume | Evaluate    | Saves disk during dev; risky for deployment. <!-- TODO: decide policy --> |

@@ -14,6 +14,7 @@ compiled site and (soon) several optional behaviours.
 | ------------------ | ------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `distantDirectory` | string  | **Yes**  | **Absolute** path where the rendered site will be written. Use forward slashes on macOS/Linux; Windows paths may use either `C:\\path` or `C:/path` and are normalised internally. |
 | `prettyUrls`       | boolean | No       | If `true`, generator omits `.html` extensions in links and writes `index.html` files in matching folders.                                                                          |
+| `hashAssets`       | boolean | No       | When enabled, CSS and JS filenames receive a short content hash (e.g. `app.4f3d.css`) for cache busting.                                                                           |
 
 > If the path does **not** exist, Kobra Kreator creates it recursively. If it
 > **does** exist but is **not empty**, existing files are overwritten when
@@ -26,11 +27,10 @@ compiled site and (soon) several optional behaviours.
 These keys are **not yet implemented** but are listed here so integrators can
 begin planning. They will be added through minor/major version bumps.
 
-| Key           | Type    | Default | Purpose                                                                                                                                        |
-| ------------- | ------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `baseUrl`     | string  | `"/"`   | Public URL prefix injected into templates for canonical links, OG tags, etc. <!-- TODO: confirm need & exact semantics. -->                    |
-| `hashAssets`  | boolean | `false` | When enabled, CSS/JS filenames receive a content hash (e.g. `app.4f3d.css`) for cache busting. <!-- TODO: design hash strategy & manifest. --> |
-| `cleanOutput` | boolean | `false` | Remove files in `distantDirectory` that no longer exist in source. Useful for CI. <!-- TODO: evaluate performance impact. -->                  |
+| Key           | Type    | Default | Purpose                                                                                                                       |
+| ------------- | ------- | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `baseUrl`     | string  | `"/"`   | Public URL prefix injected into templates for canonical links, OG tags, etc. <!-- TODO: confirm need & exact semantics. -->   |
+| `cleanOutput` | boolean | `false` | Remove files in `distantDirectory` that no longer exist in source. Useful for CI. <!-- TODO: evaluate performance impact. --> |
 
 Feel free to open a GitHub discussion if you need additional knobs.
 
@@ -45,10 +45,10 @@ Feel free to open a GitHub discussion if you need additional knobs.
 
   // v1 – optional extras
   "prettyUrls": true,
+  "hashAssets": true,
 
   // v2 – planned extras (currently ignored)
   "baseUrl": "https://my-domain.com/",
-  "hashAssets": true,
   "cleanOutput": true
 }
 ```
@@ -78,8 +78,12 @@ so editors like VS Code can auto‑validate.
     "prettyUrls": {
       "type": "boolean",
       "description": "Omit .html extensions in links and emit index.html"
+    },
+    "hashAssets": {
+      "type": "boolean",
+      "description": "Add content hash to CSS and JS filenames"
     }
-    /* TODO: add baseUrl, hashAssets, cleanOutput once supported */
+    /* TODO: add baseUrl, cleanOutput once supported */
   }
 }
 ```

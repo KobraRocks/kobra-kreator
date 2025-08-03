@@ -23,14 +23,14 @@ implementation status.
 | `--verbose` CLI flag                 | 🚧     | Extra timing info                      |
 | Config `baseUrl`                     | 🚧     | Inject canonical URLs                  |
 | Config `prettyUrls`                  | ✅     | Omit `.html` in links                  |
-| Config `hashAssets`                  | 🚧     | Content‑hashed asset filenames         |
+| Config `hashAssets`                  | ✅     | Content‑hashed asset filenames         |
 | Config `cleanOutput`                 | 🚧     | Remove stale files                     |
 | CLI `--outDir` override              | 🚧     | Temporarily change `distantDirectory`  |
 | Links CLI `--rebuild-links`          | 🚧     | Regenerate `links.json`                |
 | Watcher CLI `--debounce`             | 🚧     | Adjust debounce window                 |
 | Watcher CLI `--ignore`               | 🚧     | Exclude paths                          |
 | Watcher CLI `--poll`                 | 🚧     | Polling fallback                       |
-| Hash‑based filenames                 | 🚧     | For cache busting                      |
+| Hash‑based filenames                 | ✅     | For cache busting                      |
 | Clean up deleted assets              | ✅     | Source removals delete outputs         |
 | Image optimisation                   | 🔍     | Investigate plugin                     |
 | Symlink instead of copy              | 🤔     | Evaluate for dev convenience           |
