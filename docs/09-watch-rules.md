@@ -53,11 +53,15 @@ We reduce _raw events_ to _logical events_ with two rules:
 | `.html`                                                                                 | `renderPage(path)`             |
 | `.js` **under `/templates/`**                                                           | `renderAllUsingTemplate(path)` |
 | `.svg` **under `src-svg/`**                                                             | `renderAllUsingSvg(path)`      |
+| `.inline.js`                                                                            | `renderAllUsingScript(path)`   |
 | `.css`, `.js` **under a site folder**                                                   | `copyAsset(path)`              |
 | Media files in `media/`<br>`(.svg\*, .mp4, .jpg, .png, .webm, .webp, .pdf, .ttf, .otf)` | `copyAsset(path)`              |
 
 \* SVG files **outside** `src-svg/` are treated as binary assets, **not**
 inlined.
+
+Inline script files (`.inline.js`) trigger `renderAllUsingScript` to re-render
+any pages that include them.
 
 <!-- TODO: confirm whether `.ico` should trigger copy or be ignored. Current spec lists it in watch list. -->
 
@@ -83,6 +87,7 @@ for (const batch of debounce(watchFs(["/src", "/templates"]))) {
         tasks.add(() => renderAllUsingTemplate(evt.path));
       }
       if (kind === "SVG_INLINE") tasks.add(() => renderAllUsingSvg(evt.path));
+      if (kind === "JS_INLINE") tasks.add(() => renderAllUsingScript(evt.path));
       if (kind === "ASSET") tasks.add(() => copyAsset(evt.path));
     }
   }
