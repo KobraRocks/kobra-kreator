@@ -38,6 +38,9 @@ and what future enhancements are on the table.
 Anything **not** in this list is ignored by the copy routine; feel free to
 extend via a future config key.
 
+Inline JavaScript (`.inline.js`) files are intentionally excluded—they are
+inlined into HTML pages instead of being copied.
+
 ---
 
 ## 3. Copy triggers
