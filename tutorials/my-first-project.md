@@ -27,6 +27,7 @@ mkdir -p src/my-project
 2. Add a `config.json` that tells the generator where to place the build output:
 
 ```json
+# /src/my-project/config.json
 {
   "distantDirectory": "./dist/my-project"
 }
