@@ -10,12 +10,13 @@ compiled site and (soon) several optional behaviours.
 
 ## 1. Current fields (v1)
 
-| Key                | Type   | Required | Description                                                                                                                                                                        |
-| ------------------ | ------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `distantDirectory` | string | **Yes**  | **Absolute** path where the rendered site will be written. Use forward slashes on macOS/Linux; Windows paths may use either `C:\\path` or `C:/path` and are normalised internally. |
+| Key                | Type    | Required | Description                                                                                                                                                                        |
+| ------------------ | ------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `distantDirectory` | string  | **Yes**  | **Absolute** path where the rendered site will be written. Use forward slashes on macOS/Linux; Windows paths may use either `C:\\path` or `C:/path` and are normalised internally. |
+| `prettyUrls`       | boolean | No       | If `true`, generator omits `.html` extensions in links and writes `index.html` files in matching folders.                                                                          |
 
-> If the path does **not** exist, Kobra Kreator creates it recursively.
-> If it **does** exist but is **not empty**, existing files are overwritten when
+> If the path does **not** exist, Kobra Kreator creates it recursively. If it
+> **does** exist but is **not empty**, existing files are overwritten when
 > pages/assets share the same relative path.
 
 ---
@@ -25,12 +26,11 @@ compiled site and (soon) several optional behaviours.
 These keys are **not yet implemented** but are listed here so integrators can
 begin planning. They will be added through minor/major version bumps.
 
-| Key           | Type    | Default | Purpose                                                                                                                                                  |
-| ------------- | ------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `baseUrl`     | string  | `"/"`   | Public URL prefix injected into templates for canonical links, OG tags, etc. <!-- TODO: confirm need & exact semantics. -->                              |
-| `prettyUrls`  | boolean | `false` | If `true`, generator omits `.html` extension in your links (writes `about/index.html`). <!-- TODO: implement & document rewrite rule responsibility. --> |
-| `hashAssets`  | boolean | `false` | When enabled, CSS/JS filenames receive a content hash (e.g. `app.4f3d.css`) for cache busting. <!-- TODO: design hash strategy & manifest. -->           |
-| `cleanOutput` | boolean | `false` | Remove files in `distantDirectory` that no longer exist in source. Useful for CI. <!-- TODO: evaluate performance impact. -->                            |
+| Key           | Type    | Default | Purpose                                                                                                                                        |
+| ------------- | ------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `baseUrl`     | string  | `"/"`   | Public URL prefix injected into templates for canonical links, OG tags, etc. <!-- TODO: confirm need & exact semantics. -->                    |
+| `hashAssets`  | boolean | `false` | When enabled, CSS/JS filenames receive a content hash (e.g. `app.4f3d.css`) for cache busting. <!-- TODO: design hash strategy & manifest. --> |
+| `cleanOutput` | boolean | `false` | Remove files in `distantDirectory` that no longer exist in source. Useful for CI. <!-- TODO: evaluate performance impact. -->                  |
 
 Feel free to open a GitHub discussion if you need additional knobs.
 
@@ -43,9 +43,11 @@ Feel free to open a GitHub discussion if you need additional knobs.
   // v1 – minimal
   "distantDirectory": "/var/www/my-domain.com",
 
-  // v2 – optional extras (ignored by current release)
-  "baseUrl": "https://my-domain.com/",
+  // v1 – optional extras
   "prettyUrls": true,
+
+  // v2 – planned extras (currently ignored)
+  "baseUrl": "https://my-domain.com/",
   "hashAssets": true,
   "cleanOutput": true
 }
@@ -57,7 +59,7 @@ Feel free to open a GitHub discussion if you need additional knobs.
 
 ## 4. JSON‑Schema draft (for editor validation)
 
-Below is a *draft* Draft‑07 JSON‑Schema. Save it as `schemas/config.schema.json`
+Below is a _draft_ Draft‑07 JSON‑Schema. Save it as `schemas/config.schema.json`
 so editors like VS Code can auto‑validate.
 
 ```json
@@ -66,14 +68,18 @@ so editors like VS Code can auto‑validate.
   "title": "Kobra Kreator – site config",
   "type": "object",
   "required": ["distantDirectory"],
-  "additionalProperties": false,  // set to true once optional fields are live
+  "additionalProperties": false, // set to true once optional fields are live
   "properties": {
     "distantDirectory": {
       "type": "string",
       "description": "Absolute output path",
-      "pattern": "^(?:[a-zA-Z]:\\\\|/)"  /* simplistic absolute-path regex */
+      "pattern": "^(?:[a-zA-Z]:\\\\|/)" /* simplistic absolute-path regex */
+    },
+    "prettyUrls": {
+      "type": "boolean",
+      "description": "Omit .html extensions in links and emit index.html"
     }
-    /* TODO: add baseUrl, prettyUrls, hashAssets, cleanOutput once supported */
+    /* TODO: add baseUrl, hashAssets, cleanOutput once supported */
   }
 }
 ```
@@ -94,4 +100,3 @@ We plan to add CLI flags such as `--outDir` to temporarily override
 ---
 
 ### Next → [08-links-schema](08-links-schema.md)
-

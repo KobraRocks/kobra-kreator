@@ -22,7 +22,7 @@ implementation status.
 | `--minify` CLI flag                  | 🚧     | Collapse whitespace                    |
 | `--verbose` CLI flag                 | 🚧     | Extra timing info                      |
 | Config `baseUrl`                     | 🚧     | Inject canonical URLs                  |
-| Config `prettyUrls`                  | 🚧     | Omit `.html` in links                  |
+| Config `prettyUrls`                  | ✅     | Omit `.html` in links                  |
 | Config `hashAssets`                  | 🚧     | Content‑hashed asset filenames         |
 | Config `cleanOutput`                 | 🚧     | Remove stale files                     |
 | CLI `--outDir` override              | 🚧     | Temporarily change `distantDirectory`  |

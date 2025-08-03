@@ -9,6 +9,10 @@
       "type": "string",
       "description": "Absolute output path",
       "pattern": "^(?:[a-zA-Z]:\\\\|/)"
+    },
+    "prettyUrls": {
+      "type": "boolean",
+      "description": "Omit .html extensions and emit index.html files"
     }
   }
 }
