@@ -90,6 +90,10 @@ The spec is split into bite‑sized Markdown files inside [`/docs`](docs/):
 
 Head there for deep dives and examples.
 
+## Tutorials 🎓
+
+- [My First Project](tutorials/my-first-project.md) – a discovery‑style walkthrough that incrementally builds a site under `/src/my-project/`.
+
 ---
 
 ## Contributing 🤝
