@@ -2,8 +2,8 @@
 
 Kobra Kreator lets authors embed SVGs with two custom elements:
 
-* `<icon src="…" />`
-* `<logo src="…" />`
+* `<icon src="…"><icon>`
+* `<logo src="…"><logo>`
 
 During the build, these tags are **replaced with the raw SVG markup** found in
 `src-svg/` so you can style or animate the graphic via CSS/JS just like any
@@ -32,10 +32,10 @@ Choosing the right tag keeps pages lighter and build times faster.
 2. **`src` is relative to site’s `src-svg/`** folder. Sub‑directories are OK:
 
    ```html
-   <icon src="controls/play.svg" />
-   <logo src="product-suite/super-logo.svg" />
+   <icon src="controls/play.svg"></icon>
+   <logo src="product-suite/super-logo.svg"></logo>
    ```
-3. **Self‑closing tag** – Write as `<icon … />`, **not** `<icon></icon>`.
+3. **Self‑closing tag** – Write as `<icon></icon>``.
 4. **Case‑sensitive file match** – On case‑sensitive file systems, `check.svg`
    ≠ `Check.svg`.
 
@@ -45,7 +45,7 @@ Choosing the right tag keeps pages lighter and build times faster.
 
 ```text
 For each HTML file →
-  Parse DOM → find <icon|logo src="..." /> nodes →
+  Parse DOM → find <icon|logo src="..."></icon> nodes →
     Resolve absolute path: /src/<site>/src-svg/<src> →
     Read file → inject its textContent in place of the node →
     Remove original custom element.
@@ -61,7 +61,7 @@ For each HTML file →
 
 ```html
 <!-- author code -->
-<h1><icon src="ui/check.svg" /> Completed</h1>
+<h1><icon src="ui/check.svg"></icon> Completed</h1>
 ```
 
 during build →
