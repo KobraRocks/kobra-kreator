@@ -6,6 +6,7 @@ import {
   normalize,
   resolve,
 } from "@std/path";
+import { logWithEmoji, getEmoji } from "../lib/emoji.js";
 
 /**
  * Walks each immediate subdirectory of `src/`, validates its `config.json`
@@ -20,11 +21,11 @@ async function main() {
   try {
     for await (const entry of Deno.readDir(srcDir)) {
       entries.push(entry);
-      console.log(`✅ DIR -- ${entry.name}`);
+      logWithEmoji("success", `DIR -- ${entry.name}`);
     }
   } catch (err) {
     if (err instanceof Deno.errors.NotFound) {
-      console.warn("No src directory found.");
+      console.warn(`${getEmoji("warning")} No src directory found.`);
       return;
     }
     throw err;
@@ -32,7 +33,7 @@ async function main() {
 
   const siteDirs = entries.filter((e) => e.isDirectory);
   if (siteDirs.length === 0) {
-    console.log("No site directories found in src.");
+    logWithEmoji("info", "No site directories found in src.");
     return;
   }
 
@@ -45,9 +46,11 @@ async function main() {
     try {
       const text = await Deno.readTextFile(configPath);
       config = JSON.parse(text);
-      console.log(`✅ CONFIG -- ${dirent.name} `);
+      logWithEmoji("success", `CONFIG -- ${dirent.name} `);
     } catch (err) {
-      console.warn(`❌ Skipping ${dirent.name}: cannot read config.json`);
+      console.warn(
+        `${getEmoji("error")} Skipping ${dirent.name}: cannot read config.json`,
+      );
       continue;
     }
 
@@ -99,7 +102,7 @@ function validateConfig(config, schema) {
 
 if (import.meta.main) {
   main().catch((err) => {
-    console.error(err);
+    console.error(getEmoji("error"), err);
     Deno.exit(1);
   });
 }
