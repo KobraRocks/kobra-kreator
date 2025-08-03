@@ -25,7 +25,10 @@ Deno.test("renderPage renders page and updates links", async () => {
     join(siteDir, "config.json"),
     JSON.stringify({ distantDirectory: distDir }),
   );
-  await Deno.writeTextFile(join(siteDir, "inline.js"), "console.log('hi');");
+  await Deno.writeTextFile(
+    join(siteDir, "inline.inline.js"),
+    "console.log('hi');",
+  );
   await Deno.mkdir(join(siteDir, "src-svg", "ui"), { recursive: true });
   await Deno.writeTextFile(
     join(siteDir, "src-svg", "ui", "check.svg"),
@@ -56,7 +59,7 @@ Deno.test("renderPage renders page and updates links", async () => {
   await Deno.mkdir(join(siteDir, "blog"), { recursive: true });
   const pagePath = join(siteDir, "blog", "index.html");
   const page =
-    `title = "Hello"\ncss = ["styles.css"]\n[scripts]\nmodules = ["/js/app.js"]\ninline = ["inline.js"]\n[templates]\nhead = "default"\nnav = "default"\nfooter = "default"\n[links.nav]\ntopLevel = true\nlabel = "Home"\n#---#\n<body><icon src="ui/check.svg"></icon></body>`;
+    `title = "Hello"\ncss = ["styles.css"]\n[scripts]\nmodules = ["/js/app.js"]\ninline = ["inline.inline.js"]\n[templates]\nhead = "default"\nnav = "default"\nfooter = "default"\n[links.nav]\ntopLevel = true\nlabel = "Home"\n#---#\n<body><icon src="ui/check.svg"></icon></body>`;
   await Deno.writeTextFile(pagePath, page);
 
   const deps = await renderPage(pagePath, rootUrl);
