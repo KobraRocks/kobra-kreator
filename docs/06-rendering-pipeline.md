@@ -84,7 +84,8 @@ flowchart TD
 
 ### 2.6 Write output
 
-- Compute destination: `<distantDirectory>/<relative/path/of/page>.html`.
+- Compute destination: `<distantDirectory>/<relative/path/of/page>.html`
+  (Markdown sources are converted to `.html`).
 - Ensure folders exist (`Deno.mkdir({ recursive: true })`).
 - Write file with UTF‑8 encoding.
 
