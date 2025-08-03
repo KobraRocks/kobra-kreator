@@ -1,5 +1,5 @@
 import { renderPage } from "../lib/render-page.js";
-import { clearPageDeps, pageDeps } from "../lib/page-deps.js";
+import { clearPageDeps, pageDeps, recordPageDeps } from "../lib/page-deps.js";
 import { join, toFileUrl } from "@std/path";
 import { DOMParser } from "@b-fuze/deno-dom";
 
@@ -59,7 +59,10 @@ Deno.test("renderPage renders page and updates links", async () => {
     `title = "Hello"\ncss = ["styles.css"]\n[scripts]\nmodules = ["/js/app.js"]\ninline = ["inline.js"]\n[templates]\nhead = "default"\nnav = "default"\nfooter = "default"\n[links.nav]\ntopLevel = true\nlabel = "Home"\n#---#\n<body><icon src="ui/check.svg"></icon></body>`;
   await Deno.writeTextFile(pagePath, page);
 
-  await renderPage(pagePath, rootUrl);
+  const deps = await renderPage(pagePath, rootUrl);
+  if (deps) {
+    recordPageDeps(deps.pagePath, deps.templatesUsed, deps.svgsUsed);
+  }
 
   const outPath = join(distDir, "blog", "index.html");
   const html = await Deno.readTextFile(outPath);
@@ -92,7 +95,7 @@ Deno.test("renderPage renders page and updates links", async () => {
     topLevel: true,
   });
 
-  const deps = pageDeps.get(pagePath);
-  assertEquals(deps.templates.size, 3);
-  assert(deps.svgs.has(join(siteDir, "src-svg", "ui", "check.svg")));
+  const depRec = pageDeps.get(pagePath);
+  assertEquals(depRec.templates.size, 3);
+  assert(depRec.svgs.has(join(siteDir, "src-svg", "ui", "check.svg")));
 });
