@@ -1,4 +1,5 @@
 import { applyTemplates } from "../lib/apply-templates.js";
+import { DOMParser } from "@b-fuze/deno-dom";
 
 function assertEquals(actual, expected) {
   const da = JSON.stringify(actual);
@@ -62,4 +63,17 @@ Deno.test("applyTemplates inserts rendered fragments", async () => {
       "templates/nav/default.js",
     ].sort(),
   );
+});
+
+Deno.test("applyTemplates handles document with no root element", async () => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString("", "text/html");
+  const frontMatter = {
+    title: "Example",
+    templates: { head: "default" },
+  };
+  const links = { nav: [], footer: [] };
+  const root = new URL("./", import.meta.url);
+  await applyTemplates(doc, frontMatter, links, root);
+  assertEquals(doc.head.innerHTML, "<title>Example</title>");
 });
