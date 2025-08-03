@@ -13,6 +13,10 @@
     "prettyUrls": {
       "type": "boolean",
       "description": "Omit .html extensions and emit index.html files"
+    },
+    "hashAssets": {
+      "type": "boolean",
+      "description": "Add content hash to CSS and JS filenames"
     }
   }
 }
