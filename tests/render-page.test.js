@@ -37,7 +37,12 @@ Deno.test("renderPage renders page and updates links", async () => {
   await Deno.mkdir(join(root, "templates", "footer"), { recursive: true });
   await Deno.writeTextFile(
     join(root, "templates", "head", "default.js"),
-    "export function render({ frontMatter }) { return `<title>${frontMatter.title}</title>`; }",
+    [
+      "export function render({ frontMatter }) {",
+      '  const cssLinks = (frontMatter.css || []).map((href) => `<link rel=\\"stylesheet\\" href=\\"${href}\\">`).join(\'\');',
+      "  return `<title>${frontMatter.title}</title>${cssLinks}`;",
+      "}",
+    ].join("\n"),
   );
   await Deno.writeTextFile(
     join(root, "templates", "nav", "default.js"),
@@ -63,9 +68,9 @@ Deno.test("renderPage renders page and updates links", async () => {
   assert(doc);
   assert(doc.querySelector("nav")?.textContent === "nav");
   assert(doc.querySelector("footer")?.textContent === "foot");
-  assert(
-    doc.querySelector('link[rel="stylesheet"][href="styles.css"]'),
-  );
+  const links = doc.querySelectorAll('link[rel="stylesheet"]');
+  assertEquals(links.length, 1);
+  assert(links[0].getAttribute("href") === "styles.css");
   assert(
     doc.querySelector('script[type="module"][src="/js/app.js"]'),
   );
@@ -77,11 +82,11 @@ Deno.test("renderPage renders page and updates links", async () => {
 
   assert(html.includes("\n  <head>\n"));
 
-  const links = JSON.parse(
+  const linksFile = JSON.parse(
     await Deno.readTextFile(join(siteDir, "links.json")),
   );
-  assertEquals(links.nav.length, 1);
-  assertEquals(links.nav[0], {
+  assertEquals(linksFile.nav.length, 1);
+  assertEquals(linksFile.nav[0], {
     href: "/blog/index.html",
     label: "Home",
     topLevel: true,
