@@ -1,3 +1,6 @@
 export function render({ frontMatter }) {
-  return `<title>${frontMatter.title}</title>`;
+  const cssLinks = (frontMatter.css || [])
+    .map((href) => `<link rel="stylesheet" href="${href}">`)
+    .join("");
+  return `<title>${frontMatter.title}</title>${cssLinks}`;
 }
