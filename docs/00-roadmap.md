@@ -15,9 +15,9 @@ implementation status.
 | Links.json navigation/footer         | ✅     | Auto‑merged from front‑matter          |
 | Dependency map for smart rebuilds    | ✅     | Tracks templates, SVGs & scripts       |
 | Worker thread rendering              | ✅     | `--workers` to override default        |
-| Markdown pages                       | ❌     | Currently HTML‑only. Next Priority     |
+| Markdown pages                       | ✅     | Write pages in Markdown (`.md`)        |
 | Plugin system                        | 🚧     | Allow custom build steps               |
-| Markdown → HTML converter            | 🚧     | Blog workflow support. Next Priority   |
+| Markdown → HTML converter            | ✅     | Built-in parser                        |
 | i18n routing                         | 🚧     | Compile language variants              |
 | `--minify` CLI flag                  | 🚧     | Collapse whitespace                    |
 | `--verbose` CLI flag                 | 🚧     | Extra timing info                      |

@@ -50,7 +50,7 @@ We reduce _raw events_ to _logical events_ with two rules:
 
 | Extension(s)                                                                            | Destination action             |
 | --------------------------------------------------------------------------------------- | ------------------------------ |
-| `.html`                                                                                 | `renderPage(path)`             |
+| `.html`, `.md`                                                                          | `renderPage(path)`             |
 | `.js` **under `/templates/`**                                                           | `renderAllUsingTemplate(path)` |
 | `.svg` **under `src-svg/`**                                                             | `renderAllUsingSvg(path)`      |
 | `.inline.js`                                                                            | `renderAllUsingScript(path)`   |
