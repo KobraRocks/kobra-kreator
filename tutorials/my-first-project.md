@@ -91,7 +91,7 @@ modules = ["/js/main.js"]
 </body>
 ```
 
-Run the generator again and refresh the page to see the changes.
+Kobra Kreator automatically watch and implement changes. If it is stopped then run the generator again and refresh the page to see the changes.
 
 ---
 
