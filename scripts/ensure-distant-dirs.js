@@ -6,7 +6,7 @@ import {
   normalize,
   resolve,
 } from "@std/path";
-import { logWithEmoji, getEmoji } from "../lib/emoji.js";
+import { getEmoji, logWithEmoji } from "../lib/emoji.js";
 
 /**
  * Walks each immediate subdirectory of `src/`, validates its `config.json`
@@ -72,6 +72,13 @@ async function main() {
   }
 }
 
+/**
+ * Validate a site's configuration against the provided JSON schema.
+ *
+ * @param {Record<string, unknown>} config Parsed config object.
+ * @param {Record<string, unknown>} schema JSON schema to validate against.
+ * @returns {void}
+ */
 function validateConfig(config, schema) {
   const allowedProps = Object.keys(schema.properties ?? {});
   for (const key of Object.keys(config)) {

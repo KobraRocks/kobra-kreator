@@ -4,6 +4,12 @@ import { parse } from "@std/flags";
 import { walk } from "@std/fs/walk";
 import { watch } from "./lib/watch.js";
 
+/**
+ * Create a worker pool for rendering tasks.
+ *
+ * @param {number} size Number of workers to spawn.
+ * @returns {{push: (task: object) => Promise<void>}} Pool interface.
+ */
 function createPool(size) {
   const workerUrl = new URL("./lib/worker-task.js", import.meta.url);
   const idle = [];
@@ -43,6 +49,12 @@ function createPool(size) {
   return { push };
 }
 
+/**
+ * Render all pages using a pool of workers.
+ *
+ * @param {number} workers Number of workers to use.
+ * @returns {Promise<void>}
+ */
 async function fullBuild(workers) {
   const root = new URL("./src", import.meta.url);
   const pool = createPool(workers);
