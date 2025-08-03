@@ -3,6 +3,7 @@
 import { parse } from "@std/flags";
 import { walk } from "@std/fs/walk";
 import { watch } from "./lib/watch.js";
+import { recordPageDeps } from "./lib/page-deps.js";
 
 /**
  * Create a worker pool for rendering tasks.
@@ -24,6 +25,13 @@ function createPool(size) {
       jobs.delete(e.data.id);
       if (e.data.error) job.reject(new Error(e.data.error));
       else job.resolve();
+      if (e.data.deps) {
+        recordPageDeps(
+          e.data.deps.pagePath,
+          e.data.deps.templatesUsed,
+          e.data.deps.svgsUsed,
+        );
+      }
       idle.push(w);
       runNext();
     };
