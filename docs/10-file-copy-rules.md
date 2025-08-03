@@ -63,11 +63,17 @@ RAM blow-ups for big videos.
 
 ---
 
-## 5. Future roadmap
+## 5. Hash-based filenames
+
+If `hashAssets` is enabled (see [07-config-schema](07-config-schema.md)), CSS and JS files are copied as `name.<hash>.ext`. The original un-hashed file and any outdated hashed copies in the output directory are removed. Because pages reference these hashed filenames, any page that links to a changed asset must be rebuilt to update the hash.
+
+---
+
+## 6. Future roadmap
 
 | Feature                                    | Status      | Notes                                                                     |
 | ------------------------------------------ | ----------- | ------------------------------------------------------------------------- |
-| **Hash-based filenames** for cache busting | Done        | Enabled via `hashAssets` in _07-config-schema_.                           |
+| **Hash-based filenames** for cache busting | Done        | Enabled via `hashAssets` in _07-config-schema_; see section 5.|
 | **Clean up deleted assets**                | Done        | Source removals delete corresponding output files.                        |
 | **Image optimisation (lossless)**          | Investigate | Could be opt-in plugin.                                                   |
 | **Symlink instead of copy** on same volume | Evaluate    | Saves disk during dev; risky for deployment. <!-- TODO: decide policy --> |

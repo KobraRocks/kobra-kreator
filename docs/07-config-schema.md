@@ -14,11 +14,13 @@ compiled site and (soon) several optional behaviours.
 | ------------------ | ------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `distantDirectory` | string  | **Yes**  | **Absolute** path where the rendered site will be written. Use forward slashes on macOS/Linux; Windows paths may use either `C:\\path` or `C:/path` and are normalised internally. |
 | `prettyUrls`       | boolean | No       | If `true`, generator omits `.html` extensions in links and writes `index.html` files in matching folders.                                                                          |
-| `hashAssets`       | boolean | No       | When enabled, CSS and JS filenames receive a short content hash (e.g. `app.4f3d.css`) for cache busting.                                                                           |
+| `hashAssets`       | boolean | No       | Renames CSS and JS files to `name.<hash>.ext` for cache busting, removing the un‑hashed file and any outdated hashes. Pages that reference these assets must be rebuilt when the asset changes. |
 
 > If the path does **not** exist, Kobra Kreator creates it recursively. If it
 > **does** exist but is **not empty**, existing files are overwritten when
 > pages/assets share the same relative path.
+
+> When `hashAssets` updates an asset's filename, rebuild any pages that link to it so their references point to the new hash.
 
 ---
 
@@ -81,7 +83,7 @@ so editors like VS Code can auto‑validate.
     },
     "hashAssets": {
       "type": "boolean",
-      "description": "Add content hash to CSS and JS filenames"
+      "description": "Rename CSS and JS files to name.<hash>.ext and remove old copies"
     }
     /* TODO: add baseUrl, cleanOutput once supported */
   }
