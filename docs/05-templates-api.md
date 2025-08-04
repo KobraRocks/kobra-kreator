@@ -3,8 +3,9 @@
 Templates are **plain ECMAScript modules** that live under the shared
 `/templates/` directory. They generate reusable page fragments—`<head>`,
 `<nav>`, and `<footer>`—based on each page’s front‑matter and the site’s central
-`links.json`. When these project-level templates are absent, Kobra Kreator falls
-back to bundled defaults under `/core/templates/`.
+`links.json`. When these project-level templates are absent, Kobra Kreator
+checks for a template with the **same name** under `/core/templates/`. If no
+matching core template exists, the build fails with an error.
 
 > **TL;DR**: export a `render()` function that returns an HTML string.
 
@@ -27,7 +28,7 @@ _The generator maps the `frontMatter.templates.X` key to
 `/templates/X/<NAME>.js`, where `X ∈ { head, nav, footer }`._
 
 If the `/templates/` directory is missing, Kobra Kreator automatically uses the
-fallback files from `/core/templates/` for each slot.
+files from `/core/templates/` with the same names for each slot.
 
 ---
 
@@ -131,7 +132,8 @@ parameter or named import.
 
 - If a template **throws**, the build logs the error and halts—better fail fast
   than produce broken markup.
-- Missing template file → falls back to `/core/templates/<slot>/default.js`.
+- Missing template file → loads `/core/templates/<slot>/<name>.js`.
+- Missing in both locations → build fails with an error.
 
 ---
 
