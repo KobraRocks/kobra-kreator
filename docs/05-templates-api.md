@@ -1,9 +1,10 @@
 # 05 – Templates API
 
 Templates are **plain ECMAScript modules** that live under the shared
-`/templates/` directory. They generate reusable page fragments—`<head>`, `<nav>`,
-and `<footer>`—based on each page’s front‑matter and the site’s central
-`links.json`.
+`/templates/` directory. They generate reusable page fragments—`<head>`,
+`<nav>`, and `<footer>`—based on each page’s front‑matter and the site’s central
+`links.json`. When these project-level templates are absent, Kobra Kreator falls
+back to bundled defaults under `/core/templates/`.
 
 > **TL;DR**: export a `render()` function that returns an HTML string.
 
@@ -22,8 +23,11 @@ and `<footer>`—based on each page’s front‑matter and the site’s central
     default.js        # global footer
 ```
 
-*The generator maps the `frontMatter.templates.X` key to
-`/templates/X/<NAME>.js`, where `X ∈ { head, nav, footer }`.*
+_The generator maps the `frontMatter.templates.X` key to
+`/templates/X/<NAME>.js`, where `X ∈ { head, nav, footer }`._
+
+If the `/templates/` directory is missing, Kobra Kreator automatically uses the
+fallback files from `/core/templates/` for each slot.
 
 ---
 
@@ -46,16 +50,16 @@ export function render({ frontMatter, links }) {
 
 ### Rules
 
-1. **Synchronous return** – `render()` must return a *string*, *not* a
-   `Promise`.  <!-- TODO: evaluate allowing async template rendering in v2. -->
-2. **No side‑effects** – Templates should be *pure* functions; they must **not**
+1. **Synchronous return** – `render()` must return a _string_, _not_ a
+   `Promise`. <!-- TODO: evaluate allowing async template rendering in v2. -->
+2. **No side‑effects** – Templates should be _pure_ functions; they must **not**
    modify global state or perform network requests (keep builds deterministic).
 3. **No outer wrappers** –
 
-   * *Head* templates: emit raw tags (e.g. `<meta>`, `<link>`, `<script>`), **not**
-     the `<head>` itself.
-   * *Nav* / *Footer* templates: include the `<nav>` or `<footer>` element in the
-     output—you control its classes/ARIA attributes.  
+   - _Head_ templates: emit raw tags (e.g. `<meta>`, `<link>`, `<script>`),
+     **not** the `<head>` itself.
+   - _Nav_ / _Footer_ templates: include the `<nav>` or `<footer>` element in
+     the output—you control its classes/ARIA attributes.
 4. **Asset paths** – Use the same path rules described in
    [04-front‑matter](04-front-matter.md) (relative to site root or external
    URL).
@@ -69,7 +73,7 @@ export function render({ frontMatter, links }) {
 ```javascript
 export function render({ frontMatter }) {
   const cssLinks = (frontMatter.css || [])
-    .map(href => `<link rel="stylesheet" href="${href}">`)
+    .map((href) => `<link rel="stylesheet" href="${href}">`)
     .join("\n");
 
   return `\n<meta charset="utf-8">\n<title>${frontMatter.title}</title>\n${cssLinks}`;
@@ -81,8 +85,8 @@ export function render({ frontMatter }) {
 ```javascript
 export function render({ links }) {
   const items = links.nav
-    .filter(l => l.topLevel)
-    .map(l => `<li><a href="${l.href}">${l.label}</a></li>`)  // TODO: handle subLevel buckets
+    .filter((l) => l.topLevel)
+    .map((l) => `<li><a href="${l.href}">${l.label}</a></li>`) // TODO: handle subLevel buckets
     .join("\n");
 
   return `<nav class="site-nav"><ul>${items}</ul></nav>`;
@@ -98,12 +102,17 @@ export function render({ links }) {
     return acc;
   }, {});
 
-  return `<footer>${Object.entries(columns)
-    .map(([col, items]) =>
-      `<div class="foot-col"><h3>${col}</h3>${items
-        .map(i => `<a href="${i.href}">${i.label}</a>`)  // TODO: template for inner links
-        .join("")}</div>`)
-    .join("")}</footer>`;
+  return `<footer>${
+    Object.entries(columns)
+      .map(([col, items]) =>
+        `<div class="foot-col"><h3>${col}</h3>${
+          items
+            .map((i) => `<a href="${i.href}">${i.label}</a>`) // TODO: template for inner links
+            .join("")
+        }</div>`
+      )
+      .join("")
+  }</footer>`;
 }
 ```
 
@@ -120,20 +129,17 @@ parameter or named import.
 
 ## 5. Error handling
 
-* If a template **throws**, the build logs the error and halts—better fail fast
+- If a template **throws**, the build logs the error and halts—better fail fast
   than produce broken markup.
-* Missing template file → build error with clear path hint.
-
-  <!-- TODO: consider fallback to `default.js` if missing. -->
+- Missing template file → falls back to `/core/templates/<slot>/default.js`.
 
 ---
 
 ## 6. Versioning & breaking changes
 
-The API above is considered **v1**. Any breaking change (e.g. async render)
-will bump a major version and be listed in `CHANGELOG.md`.
+The API above is considered **v1**. Any breaking change (e.g. async render) will
+bump a major version and be listed in `CHANGELOG.md`.
 
 ---
 
 ### Next → [06-rendering-pipeline](06-rendering-pipeline.md)
-

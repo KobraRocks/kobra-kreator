@@ -2,3 +2,5 @@ src/
 public/
 templates/
 
+!core/templates/
+!core/templates/**
