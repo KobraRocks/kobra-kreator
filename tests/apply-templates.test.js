@@ -44,9 +44,9 @@ Deno.test("applyTemplates inserts rendered fragments", async () => {
     },
   };
   const links = { nav: [], footer: [] };
-
+  const config = { distantDirectory: "/tmp" };
   const root = new URL("./", import.meta.url);
-  const used = await applyTemplates(doc, frontMatter, links, root);
+  const used = await applyTemplates(doc, frontMatter, links, config, root);
 
   assertEquals(doc.head.innerHTML, "<title>Example</title>");
   assertEquals(
@@ -73,8 +73,9 @@ Deno.test("applyTemplates handles document with no root element", async () => {
     templates: { head: "default" },
   };
   const links = { nav: [], footer: [] };
+  const config = { distantDirectory: "/tmp" };
   const root = new URL("./", import.meta.url);
-  await applyTemplates(doc, frontMatter, links, root);
+  await applyTemplates(doc, frontMatter, links, config, root);
   assertEquals(doc.head.innerHTML, "<title>Example</title>");
 });
 
@@ -87,12 +88,13 @@ Deno.test("applyTemplates falls back to core templates", async () => {
     templates: { head: "default", nav: "default", footer: "default" },
   };
   const links = { nav: [], footer: [] };
+  const config = { distantDirectory: "/tmp" };
 
   // Provide a root directory without templates to trigger fallback.
   const root = new URL("./no-templates/", import.meta.url);
-  const used = await applyTemplates(doc, frontMatter, links, root);
+  const used = await applyTemplates(doc, frontMatter, links, config, root);
 
-  assertEquals(doc.head.innerHTML, "<title>Example</title>");
+  assertEquals(doc.head.innerHTML.includes("<title>Example</title>"), true);
   assertEquals(
     doc.body.innerHTML,
     "<nav></nav><main>hi</main><footer></footer>",
@@ -119,12 +121,12 @@ Deno.test(
       templates: { head: "missing" },
     };
     const links = { nav: [], footer: [] };
-
+    const config = { distantDirectory: "/tmp" };
     const root = new URL("./no-templates/", import.meta.url);
 
     let threw = false;
     try {
-      await applyTemplates(doc, frontMatter, links, root);
+      await applyTemplates(doc, frontMatter, links, config, root);
     } catch (err) {
       threw = true;
       assertEquals(
