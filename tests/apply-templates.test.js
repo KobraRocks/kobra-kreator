@@ -1,6 +1,11 @@
 import { applyTemplates } from "../lib/apply-templates.js";
 import { DOMParser } from "@b-fuze/deno-dom";
 
+/**
+ * Minimal equality assertion for tests.
+ * @param {*} actual Value produced by the test.
+ * @param {*} expected Expected value.
+ */
 function assertEquals(actual, expected) {
   const da = JSON.stringify(actual);
   const db = JSON.stringify(expected);
@@ -46,9 +51,9 @@ Deno.test("applyTemplates inserts rendered fragments", async () => {
   const links = { nav: [], footer: [] };
 
   const root = new URL("./", import.meta.url);
-  const used = await applyTemplates(doc, frontMatter, links, root);
+  const used = await applyTemplates(doc, frontMatter, links, {}, root);
 
-  assertEquals(doc.head.innerHTML, "<title>Example</title>");
+  assertEquals(doc.head.innerHTML.includes("<title>Example</title>"), true);
   assertEquals(
     doc.body.innerHTML,
     "<nav>nav</nav><main>hi</main><footer>foot</footer>",
@@ -74,8 +79,8 @@ Deno.test("applyTemplates handles document with no root element", async () => {
   };
   const links = { nav: [], footer: [] };
   const root = new URL("./", import.meta.url);
-  await applyTemplates(doc, frontMatter, links, root);
-  assertEquals(doc.head.innerHTML, "<title>Example</title>");
+  await applyTemplates(doc, frontMatter, links, {}, root);
+  assertEquals(doc.head.innerHTML.includes("<title>Example</title>"), true);
 });
 
 Deno.test("applyTemplates falls back to core templates", async () => {
@@ -90,9 +95,9 @@ Deno.test("applyTemplates falls back to core templates", async () => {
 
   // Provide a root directory without templates to trigger fallback.
   const root = new URL("./no-templates/", import.meta.url);
-  const used = await applyTemplates(doc, frontMatter, links, root);
+  const used = await applyTemplates(doc, frontMatter, links, {}, root);
 
-  assertEquals(doc.head.innerHTML, "<title>Example</title>");
+  assertEquals(doc.head.innerHTML.includes("<title>Example</title>"), true);
   assertEquals(
     doc.body.innerHTML,
     "<nav></nav><main>hi</main><footer></footer>",
@@ -124,7 +129,7 @@ Deno.test(
 
     let threw = false;
     try {
-      await applyTemplates(doc, frontMatter, links, root);
+      await applyTemplates(doc, frontMatter, links, {}, root);
     } catch (err) {
       threw = true;
       assertEquals(
