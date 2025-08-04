@@ -12,6 +12,8 @@ import { getEmoji, logWithEmoji } from "../lib/emoji.js";
  * Walks each immediate subdirectory of `src/`, validates its `config.json`
  * against the configuration schema, normalizes the `distantDirectory` path and
  * ensures the referenced directory exists on disk.
+ *
+ * @returns {Promise<void>}
  */
 async function main() {
   const root = resolve(dirname(fromFileUrl(import.meta.url)), "..");
