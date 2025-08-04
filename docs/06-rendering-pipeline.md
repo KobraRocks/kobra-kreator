@@ -52,9 +52,13 @@ flowchart TD
   the site’s `links.json`.
 - **Deduplication** – Two identical `href`/`label` pairs are collapsed if from
   the same source file. Else an error is thrown.
-
 - The file is written back **only if** its in‑memory representation changed to
   avoid spurious disk writes.
+- When a page modifies the navigation data, all other pages declaring
+  `[links]` are automatically re-rendered so templates see the latest
+  information.
+- `links.json` is **auto‑managed**; manual edits are ignored and will be
+  overwritten on the next page render.
 
 ### 2.3 Apply templates
 
