@@ -26,12 +26,7 @@ function createPool(size) {
       if (e.data.error) job.reject(new Error(e.data.error));
       else job.resolve();
       if (e.data.deps) {
-        recordPageDeps(
-          e.data.deps.pagePath,
-          e.data.deps.templatesUsed,
-          e.data.deps.svgsUsed,
-          e.data.deps.scriptsUsed,
-        );
+        recordPageDeps(e.data.deps);
       }
       idle.push(w);
       runNext();

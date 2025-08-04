@@ -4,7 +4,7 @@ import {
   pagesUsingTemplate,
   recordPageDeps,
 } from "../lib/page-deps.js";
-import { classifyPath, reduceEvents } from "../lib/watch.js";
+import { classifyPath, reduceEvents } from "../lib/fs-utils.js";
 import { join, toFileUrl } from "@std/path";
 
 /**
