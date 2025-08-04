@@ -16,24 +16,24 @@ and `<footer>` elements at render‑time.
 
 ```jsonc
 {
-  "nav": [               // array – order is preserved
-    { "topLevel": true, "href": "/",      "label": "Home" },
+  "nav": [ // array – order is preserved
+    { "topLevel": true, "href": "/", "label": "Home" },
     { "subLevel": "docs", "href": "/docs/intro.html", "label": "Docs" }
   ],
-  "footer": [           // array – grouped into columns by template logic
+  "footer": [ // array – grouped into columns by template logic
     { "column": "company", "href": "/about.html", "label": "About" },
-    { "column": "legal",   "href": "/terms.html", "label": "Terms" }
+    { "column": "legal", "href": "/terms.html", "label": "Terms" }
   ]
 }
 ```
 
-* **`nav` array**
+- **`nav` array**
 
-  * **Top‑level item** → object with `topLevel: true`.
-  * **Sub‑level item** → object with `subLevel: "<bucket>"`.
-* **`footer` array**
+  - **Top‑level item** → object with `topLevel: true`.
+  - **Sub‑level item** → object with `subLevel: "<bucket>"`.
+- **`footer` array**
 
-  * Items carry a `column: "<bucket>"` property.
+  - Items carry a `column: "<bucket>"` property.
 
 > The build **does not** restrict buckets to a predefined list—templates decide
 > how to group/sort them.
@@ -46,9 +46,9 @@ and `<footer>` elements at render‑time.
 | ---------- | ------------ | ------- | -------- | --------------------------------------------------------------------- |
 | `href`     | nav & footer | string  | **Yes**  | Absolute or root‑relative path.                                       |
 | `label`    | nav & footer | string  | **Yes**  | Text visible in menu.                                                 |
-| `topLevel` | nav          | boolean | ⬜        | Marks item as a first‑level link. Mutually exclusive with `subLevel`. |
-| `subLevel` | nav          | string  | ⬜        | Bucket name for nested menu.                                          |
-| `column`   | footer       | string  | ⬜        | Column bucket name.                                                   |
+| `topLevel` | nav          | boolean | ⬜       | Marks item as a first‑level link. Mutually exclusive with `subLevel`. |
+| `subLevel` | nav          | string  | ⬜       | Bucket name for nested menu.                                          |
+| `column`   | footer       | string  | ⬜       | Column bucket name.                                                   |
 
 <!-- TODO: consider allowing `target:"_blank"`, `rel:"noopener"` for external links. -->
 
@@ -64,8 +64,8 @@ and `<footer>` elements at render‑time.
 
 ## 3. How links are **added & merged**
 
-When a page has `[links]` keys in its front‑matter (see **04‑front‑matter**), the
-renderer merges a new object into the array:
+When a page has `[links]` keys in its front‑matter (see **04‑front‑matter**),
+the renderer merges a new object into the array:
 
 ```toml
 [links.nav]
@@ -73,11 +73,13 @@ topLevel = true
 label = "Blog"
 ```
 
-* If a nav item with the **same `href`** already exists, its `label` is updated.
-* Merge happens **before** templates render so they always see the latest map.
-* The file is rewritten to disk only when the in‑memory map changed, reducing
+- If a nav item with the **same `href`** already exists, its `label` is updated.
+- Omitting `[links.nav]`, `[links.footer]`, or the entire `[links]` table
+  automatically prunes any existing entry for that page.
+- Merge happens **before** templates render so they always see the latest map.
+- The file is rewritten to disk only when the in‑memory map changed, reducing
   noisy Git diffs.
-* `links.json` is not watched for changes; update navigation through page
+- `links.json` is not watched for changes; update navigation through page
   front‑matter instead of editing the file directly.
 
 <!-- TODO: expose a CLI `--rebuild-links` flag to regenerate links.json from scratch. -->
@@ -105,8 +107,8 @@ tests.
           { "required": ["subLevel"], "not": { "required": ["topLevel"] } }
         ],
         "properties": {
-          "href":   { "type": "string" },
-          "label":  { "type": "string" },
+          "href": { "type": "string" },
+          "label": { "type": "string" },
           "topLevel": { "type": "boolean" },
           "subLevel": { "type": "string" }
         },
@@ -119,8 +121,8 @@ tests.
         "type": "object",
         "required": ["href", "label", "column"],
         "properties": {
-          "href":   { "type": "string" },
-          "label":  { "type": "string" },
+          "href": { "type": "string" },
+          "label": { "type": "string" },
           "column": { "type": "string" }
         },
         "additionalProperties": false
@@ -141,4 +143,3 @@ and be announced in `CHANGELOG.md`.
 ---
 
 ### Next → [09-watch-rules](09-watch-rules.md)
-
