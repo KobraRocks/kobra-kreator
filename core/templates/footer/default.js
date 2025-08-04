@@ -2,11 +2,14 @@
  * Render the default footer element.
  *
  * @param {{links: {footer?: {href: string, label: string}[]}}} params
+ * @param {{config: {copyright?: string}}} params
  * @returns {string}
  */
-export function render({ links }) {
+export function render({ links, config }) {
+  const copyright = config.copyright ? `<p><small>${copyright}</small></p>`: ""; 
+
   const items = (links.footer || [])
     .map((l) => `<a href="${l.href}">${l.label}</a>`)
     .join("");
-  return `<footer>${items}</footer>`;
+  return `<footer>${items}${copyright}</footer>`;
 }

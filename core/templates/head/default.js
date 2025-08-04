@@ -5,9 +5,25 @@
  * @returns {string}
  */
 export function render({ frontMatter }) {
-  const cssLinks = (frontMatter.css || [])
-    .map((href) => `<link rel="stylesheet" href="${href}">`)
-    .join("");
-  const title = frontMatter.title ?? "";
-  return `<title>${title}</title>${cssLinks}`;
+
+  const {
+  title = "",
+  description = "",
+  css = ["styles.css"]
+  } = frontMatter;
+
+  const metaDescription = description ? `<meta name="description" content="${description}">` : "";
+  
+  let cssLinks = '';
+  for (const path of css) {
+    cssLinks += `\n<link rel="stylesheet" href="/css/${path}">`;
+  }
+
+  return `
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    ${metaDescription}
+    <title>${title}</title>
+    ${cssLinks}
+  `;
 }

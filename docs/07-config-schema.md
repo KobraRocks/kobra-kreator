@@ -15,6 +15,7 @@ compiled site and (soon) several optional behaviours.
 | `distantDirectory` | string  | **Yes**  | **Absolute** path where the rendered site will be written. Use forward slashes on macOS/Linux; Windows paths may use either `C:\\path` or `C:/path` and are normalised internally. |
 | `prettyUrls`       | boolean | No       | If `true`, generator omits `.html` extensions in links and writes `index.html` files in matching folders.                                                                          |
 | `hashAssets`       | boolean | No       | Renames CSS and JS files to `name.<hash>.ext` for cache busting, removing the un‑hashed file and any outdated hashes. Pages that reference these assets must be rebuilt when the asset changes. |
+| `copyright`        | string | No        | To be used in templates like the footer.
 
 > If the path does **not** exist, Kobra Kreator creates it recursively. If it
 > **does** exist but is **not empty**, existing files are overwritten when

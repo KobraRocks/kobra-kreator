@@ -41,9 +41,10 @@ files from `/core/templates/` with the same names for each slot.
  * @param {Object} params             – injected by the build system
  * @param {FrontMatter} params.frontMatter – parsed TOML object for the page
  * @param {LinksJson}  params.links        – contents of links.json for the site
+ * @param {Config} params.config        - content of config.json for the site
  * @returns {string}                    – raw HTML that will be inserted verbatim
  */
-export function render({ frontMatter, links }) {
+export function render({ frontMatter, links, config }) {
   // build HTML string here – any template engine / tagged literal is fine
   return `\n<meta charset="utf-8">\n<title>${frontMatter.title}</title>\n`;
 }
