@@ -100,12 +100,7 @@ Deno.test("watch re-renders pages when inline scripts change", async () => {
 
   const deps = await renderPage(pagePath, rootUrl);
   if (deps) {
-    recordPageDeps(
-      deps.pagePath,
-      deps.templatesUsed,
-      deps.svgsUsed,
-      deps.scriptsUsed,
-    );
+    recordPageDeps(deps);
   }
 
   const outPath = join(distDir, "index.html");

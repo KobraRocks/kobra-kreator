@@ -38,12 +38,7 @@ Deno.test(
 
     const deps = await renderPage(pagePath, rootUrl);
     if (deps) {
-      recordPageDeps(
-        deps.pagePath,
-        deps.templatesUsed,
-        deps.svgsUsed,
-        deps.scriptsUsed,
-      );
+      recordPageDeps(deps);
     }
 
     const outPath = join(distDir, "index.html");
@@ -65,14 +60,7 @@ Deno.test(
         for (const page of pagesUsingTemplate(path)) {
           const d = await renderPage(page, rootUrl);
           if (d) {
-            recordPageDeps(
-              d.pagePath,
-              d.templatesUsed,
-              d.svgsUsed,
-              d.scriptsUsed,
-              d.cssUsed,
-              d.modulesUsed,
-            );
+            recordPageDeps(d);
           }
         }
       }
@@ -91,14 +79,7 @@ Deno.test(
         for (const page of pagesUsingTemplate(path)) {
           const d = await renderPage(page, rootUrl);
           if (d) {
-            recordPageDeps(
-              d.pagePath,
-              d.templatesUsed,
-              d.svgsUsed,
-              d.scriptsUsed,
-              d.cssUsed,
-              d.modulesUsed,
-            );
+            recordPageDeps(d);
           }
         }
       }

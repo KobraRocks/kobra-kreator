@@ -71,12 +71,7 @@ Deno.test("renderPage renders page and updates links", async () => {
 
   const deps = await renderPage(pagePath, rootUrl);
   if (deps) {
-    recordPageDeps(
-      deps.pagePath,
-      deps.templatesUsed,
-      deps.svgsUsed,
-      deps.scriptsUsed,
-    );
+    recordPageDeps(deps);
   }
 
   const outPath = join(distDir, "blog", "index.html");
