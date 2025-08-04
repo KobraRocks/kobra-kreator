@@ -1,7 +1,7 @@
 /**
  * Render the default navigation element.
  *
- * @param {{links: {nav?: {href: string, label: string}[]}}} params
+ * @param {{ links: { nav?: { href: string, label: string }[] } }} params
  * @returns {string}
  */
 export function render({ links }) {
