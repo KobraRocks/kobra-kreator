@@ -107,3 +107,33 @@ Deno.test("applyTemplates falls back to core templates", async () => {
     ].sort(),
   );
 });
+
+Deno.test(
+  "applyTemplates errors when template missing in project and core",
+  async () => {
+    const doc = new StubDocument();
+    doc.body.innerHTML = "<main>hi</main>";
+
+    const frontMatter = {
+      title: "Example",
+      templates: { head: "missing" },
+    };
+    const links = { nav: [], footer: [] };
+
+    const root = new URL("./no-templates/", import.meta.url);
+
+    let threw = false;
+    try {
+      await applyTemplates(doc, frontMatter, links, root);
+    } catch (err) {
+      threw = true;
+      assertEquals(
+        err.message.includes(
+          "Template head/missing.js not found in project or core directories",
+        ),
+        true,
+      );
+    }
+    if (!threw) throw new Error("Expected applyTemplates to throw");
+  },
+);

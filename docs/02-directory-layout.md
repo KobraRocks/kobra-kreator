@@ -52,7 +52,8 @@ project-root/
 1. **Folder == domain.** The folder name must match the domain you will deploy
    under (e.g. `my‑domain.com`). Spaces and uppercase discouraged.
 2. **Templates are global.** All sites pull from the same `/templates` pool, but
-   the folder may be omitted—defaults from `/core/templates` are used instead.
+   the folder may be omitted—matching files from `/core/templates` are used
+   instead.
 3. **Sub‑folders allowed.** Inside any site, you can nest pages arbitrarily
    (e.g. `docs/getting-started.html`) – the relative path is preserved in the
    build output.
