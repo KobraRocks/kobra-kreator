@@ -1,8 +1,11 @@
 # 02 – Directory Layout
 
-This document describes the **author‑side** folder structure that Kobra Kreator expects, as well as the **build output** location controlled by each site’s `config.json`.
+This document describes the **author‑side** folder structure that Kobra Kreator
+expects, as well as the **build output** location controlled by each site’s
+`config.json`.
 
-> **Convention over configuration** – Stick to the tree below and the generator will “just work”.
+> **Convention over configuration** – Stick to the tree below and the generator
+> will “just work”.
 
 ---
 
@@ -30,7 +33,7 @@ project-root/
 │  │  └─ config.json                     # build target path, etc.
 │  └─ another-domain.com/ …
 │
-├─ templates/
+├─ templates/                           # optional – falls back to /core/templates
 │  ├─ head/
 │  │  ├─ default.js
 │  │  └─ blog.js
@@ -46,10 +49,15 @@ project-root/
 
 ### Key rules
 
-1. **Folder == domain.** The folder name must match the domain you will deploy under (e.g. `my‑domain.com`). Spaces and uppercase discouraged.
-2. **Templates are global.** All sites pull from the same `/templates` pool.
-3. **Sub‑folders allowed.** Inside any site, you can nest pages arbitrarily (e.g. `docs/getting-started.html`) – the relative path is preserved in the build output.
-4. **`src-svg/` is special.** SVGs stored here are inlined by the generator when referenced via `<icon>` or `<logo>` tags.
+1. **Folder == domain.** The folder name must match the domain you will deploy
+   under (e.g. `my‑domain.com`). Spaces and uppercase discouraged.
+2. **Templates are global.** All sites pull from the same `/templates` pool, but
+   the folder may be omitted—defaults from `/core/templates` are used instead.
+3. **Sub‑folders allowed.** Inside any site, you can nest pages arbitrarily
+   (e.g. `docs/getting-started.html`) – the relative path is preserved in the
+   build output.
+4. **`src-svg/` is special.** SVGs stored here are inlined by the generator when
+   referenced via `<icon>` or `<logo>` tags.
 
 ---
 
@@ -59,11 +67,12 @@ Each site declares an **absolute** output path in its `config.json`:
 
 ```json
 {
-  "distantDirectory": "/absolute/path/for/my-domain.com"  
+  "distantDirectory": "/absolute/path/for/my-domain.com"
 }
 ```
 
-The generator reproduces the same folder hierarchy **inside** that destination. Example:
+The generator reproduces the same folder hierarchy **inside** that destination.
+Example:
 
 ```text
 /absolute/path/for/my-domain.com/
@@ -95,12 +104,12 @@ The generator reproduces the same folder hierarchy **inside** that destination. 
 
 Need a new asset category (e.g. `fonts/`, `downloads/`)?
 
-* Place it **inside `media/`** so the default copy rules pick it up.
-* If you require custom processing (minification, compression), plan to add a build‑step plugin.
+- Place it **inside `media/`** so the default copy rules pick it up.
+- If you require custom processing (minification, compression), plan to add a
+  build‑step plugin.
 
   <!-- TODO: link to plugin system once designed -->
 
 ---
 
 ### Next stop → [03‑special‑svg‑tags](03-special-svg-tags.md)
-

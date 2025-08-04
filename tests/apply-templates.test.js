@@ -77,3 +77,33 @@ Deno.test("applyTemplates handles document with no root element", async () => {
   await applyTemplates(doc, frontMatter, links, root);
   assertEquals(doc.head.innerHTML, "<title>Example</title>");
 });
+
+Deno.test("applyTemplates falls back to core templates", async () => {
+  const doc = new StubDocument();
+  doc.body.innerHTML = "<main>hi</main>";
+
+  const frontMatter = {
+    title: "Example",
+    templates: { head: "default", nav: "default", footer: "default" },
+  };
+  const links = { nav: [], footer: [] };
+
+  // Provide a root directory without templates to trigger fallback.
+  const root = new URL("./no-templates/", import.meta.url);
+  const used = await applyTemplates(doc, frontMatter, links, root);
+
+  assertEquals(doc.head.innerHTML, "<title>Example</title>");
+  assertEquals(
+    doc.body.innerHTML,
+    "<nav></nav><main>hi</main><footer></footer>",
+  );
+  const endsWith = used.map((p) => p.slice(p.indexOf("core/templates")));
+  assertEquals(
+    endsWith.sort(),
+    [
+      "core/templates/footer/default.js",
+      "core/templates/head/default.js",
+      "core/templates/nav/default.js",
+    ].sort(),
+  );
+});
