@@ -60,6 +60,10 @@ We reduce _raw events_ to _logical events_ with two rules:
 \* SVG files **outside** `src-svg/` are treated as binary assets, **not**
 inlined.
 
+`links.json` itself is not watched. Navigation is updated by editing page
+front‑matter; when a page’s `[links]` data changes, all other pages declaring
+links are re-rendered to stay in sync.
+
 Inline script files (`.inline.js`) trigger `renderAllUsingScript` to re-render
 any pages that include them.
 

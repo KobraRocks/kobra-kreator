@@ -5,6 +5,10 @@ lives alongside each domain folder. Templates read this file to build `<nav>`
 and `<footer>` elements at render‑time.
 
 > **Path:** `/src/<site>/links.json`
+>
+> This file is **auto-generated** from page front-matter. Editing it manually is
+> discouraged because changes are overwritten the next time any page is
+> rendered.
 
 ---
 
@@ -73,6 +77,8 @@ label = "Blog"
 * Merge happens **before** templates render so they always see the latest map.
 * The file is rewritten to disk only when the in‑memory map changed, reducing
   noisy Git diffs.
+* `links.json` is not watched for changes; update navigation through page
+  front‑matter instead of editing the file directly.
 
 <!-- TODO: expose a CLI `--rebuild-links` flag to regenerate links.json from scratch. -->
 
