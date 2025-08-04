@@ -101,6 +101,9 @@ for (const batch of debounce(watchFs(["/src", "/templates"]))) {
 }
 ```
 
+> **Efficiency note** – render tasks are keyed by page and deduplicated per
+> batch, so a page touched by multiple changes re-renders only once.
+
 <!-- TODO: lift this snippet into `/examples/watch-snippet.ts` for integration tests. -->
 
 ---
