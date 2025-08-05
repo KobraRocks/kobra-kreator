@@ -54,10 +54,13 @@ project-root/
 2. **Templates are global.** All sites pull from the same `/templates` pool, but
    the folder may be omitted—matching files from `/core/templates` are used
    instead.
-3. **Sub‑folders allowed.** Inside any site, you can nest pages arbitrarily
+3. **Styles can fall back to core.** If a stylesheet referenced by a page is
+   missing under the site folder, a file with the same path from `/core/css/`
+   is used instead.
+4. **Sub‑folders allowed.** Inside any site, you can nest pages arbitrarily
    (e.g. `docs/getting-started.html`) – the relative path is preserved in the
    build output.
-4. **`src-svg/` is special.** SVGs stored here are inlined by the generator when
+5. **`src-svg/` is special.** SVGs stored here are inlined by the generator when
    referenced via `<icon>` or `<logo>` tags.
 
 ---

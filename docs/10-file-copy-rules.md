@@ -41,6 +41,13 @@ extend via a future config key.
 Inline JavaScript (`.inline.js`) files are intentionally excluded—they are
 inlined into HTML pages instead of being copied.
 
+### CSS fallbacks
+
+If a referenced stylesheet is missing from the site folder, Kobra Kreator looks
+for a file with the same relative path under `/core/css/`. When found, that
+fallback is copied to the destination. If no such file exists, an error is
+logged but the watcher continues running.
+
 ---
 
 ## 3. Copy triggers
