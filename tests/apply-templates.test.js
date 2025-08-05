@@ -29,6 +29,9 @@ class StubDocument {
       prepend: (el) => {
         this.head = el;
       },
+      appendChild: (el) => {
+        this.body = el;
+      },
     };
   }
   createElement(tag) {
@@ -38,7 +41,6 @@ class StubDocument {
 
 Deno.test("applyTemplates inserts rendered fragments", async () => {
   const doc = new StubDocument();
-  doc.body.innerHTML = "<main>hi</main>";
 
   const frontMatter = {
     title: "Example",
@@ -48,14 +50,15 @@ Deno.test("applyTemplates inserts rendered fragments", async () => {
       footer: "default",
     },
   };
+  const page = { frontMatter, html: "hi" };
   const links = { nav: [], footer: [] };
   const config = { distantDirectory: "/tmp" };
   const root = new URL("./", import.meta.url);
-  const used = await applyTemplates(doc, frontMatter, links, config, root);
+  const used = await applyTemplates(doc, page, links, config, root);
 
   assertEquals(doc.head.innerHTML.includes("<title>Example</title>"), true);
   assertEquals(
-    doc.body.innerHTML,
+    doc.body.innerHTML.replace(/\s+/g, ""),
     "<nav>nav</nav><main>hi</main><footer>foot</footer>",
   );
   assertEquals(used.length, 3);
@@ -77,33 +80,33 @@ Deno.test("applyTemplates handles document with no root element", async () => {
     title: "Example",
     templates: { head: "default" },
   };
+  const page = { frontMatter, html: "" };
   const links = { nav: [], footer: [] };
   const config = { distantDirectory: "/tmp" };
   const root = new URL("./", import.meta.url);
-  await applyTemplates(doc, frontMatter, links, config, root);
+  await applyTemplates(doc, page, links, config, root);
   assertEquals(doc.head.innerHTML, "<title>Example</title>");
 
 });
 
 Deno.test("applyTemplates falls back to core templates", async () => {
   const doc = new StubDocument();
-  doc.body.innerHTML = "<main>hi</main>";
 
   const frontMatter = {
     title: "Example",
     templates: { head: "default", nav: "default", footer: "default" },
   };
+  const page = { frontMatter, html: "hi" };
   const links = { nav: [], footer: [] };
   const config = { distantDirectory: "/tmp" };
 
   // Provide a root directory without templates to trigger fallback.
   const root = new URL("./no-templates/", import.meta.url);
-  const used = await applyTemplates(doc, frontMatter, links, config, root);
-
+  const used = await applyTemplates(doc, page, links, config, root);
 
   assertEquals(doc.head.innerHTML.includes("<title>Example</title>"), true);
   assertEquals(
-    doc.body.innerHTML,
+    doc.body.innerHTML.replace(/\s+/g, ""),
     "<nav></nav><main>hi</main><footer></footer>",
   );
   const endsWith = used.map((p) => p.slice(p.indexOf("core/templates")));
@@ -121,19 +124,19 @@ Deno.test(
   "applyTemplates errors when template missing in project and core",
   async () => {
     const doc = new StubDocument();
-    doc.body.innerHTML = "<main>hi</main>";
 
     const frontMatter = {
       title: "Example",
       templates: { head: "missing" },
     };
+    const page = { frontMatter, html: "hi" };
     const links = { nav: [], footer: [] };
     const config = { distantDirectory: "/tmp" };
     const root = new URL("./no-templates/", import.meta.url);
 
     let threw = false;
     try {
-      await applyTemplates(doc, frontMatter, links, config, root);
+      await applyTemplates(doc, page, links, config, root);
     } catch (err) {
       threw = true;
       assertEquals(
