@@ -81,7 +81,7 @@ nav {
       color: var(--color-accent);
     }
 
-    svg {
+    svg#brand-logo {
       width: calc(var(--base-unit) * 1.5);
       height: auto;
     }
@@ -219,7 +219,7 @@ footer {
             }
     }
 
-    svg#footer-logo {
+    svg#brand-logo {
       width: calc(var(--base-unit) * 2);
       height: auto;
     }
