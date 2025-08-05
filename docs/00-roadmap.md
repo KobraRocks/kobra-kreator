@@ -7,7 +7,9 @@ implementation status.
 | ------------------------------------ | ------ | -------------------------------------- |
 | Multi‑site build from one repo       | ✅     | Folders in `/src/` for each domain     |
 | Pure Deno runtime                    | ✅     | No Node.js tool‑chain needed           |
-| Template modules for head/nav/footer | ✅     | Reusable JS `render()` functions       |
+| User Template modules for head/nav/footer | ✅     | Reusable JS `render()` functions       |
+| Core templates for head/nav/footer   | ✅     | Reusable JS `render()` functions when no user override exists              |
+| Core css for fast start              | ✅     | Reusable css files when no user override exists       |
 | Hot‑reload file watcher              | ✅     | Uses `Deno.watchFs` with debounce      |
 | SVG tags `<icon>` / `<logo>`         | ✅     | Tags replaced with inline SVG          |
 | Arbitrary page scripts               | ✅     | `scripts.modules` & `scripts.inline`   |
