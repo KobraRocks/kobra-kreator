@@ -25,7 +25,10 @@ attach, which templates to render, and how to update `links.json`.
 | `css`                   | string\[] | ⬜       | Extra stylesheets. Relative to site root **or** absolute URL (CDN). |
 | `[templates].head`      | string    | ✅       | File name under `templates/head/` (without extension).              |
 | `[templates].nav`       | string    | ⬜       | File name under `templates/nav/`.                                   |
+| `[templates].header`    | string    | ⬜       | File name under `templates/header/`.                                |
 | `[templates].footer`    | string    | ⬜       | File name under `templates/footer/`.                                |
+| `[templates].before`    | table     | ⬜       | Slots rendered **before** main content; each key maps to a template name or `{name, priority}`. |
+| `[templates].after`     | table     | ⬜       | Slots rendered **after** main content; each key maps to a template name or `{name, priority}`. |
 | `[scripts].modules`     | string\[] | ⬜       | Added as `<script type="module" src="…">` _before_ inline scripts.  |
 | `[scripts].inline`      | string\[] | ⬜       | **Filename** to inline (**not** external URL)                       |
 | `[links].nav.topLevel`  | bool      | ⬜       | If `true`, add to `links.json.nav` (top level).                     |
@@ -87,11 +90,25 @@ inline  = ["form.inline.js"]
 
 ---
 
+### Before/after slots
+
+Use `templates.before` and `templates.after` to inject arbitrary fragments around the main content. Each entry maps a slot name to a template file or an object with `name` and optional `priority` (higher numbers render first).
+
+```toml
+[templates.before]
+promo = { name = "promo-banner", priority = 1 }
+
+[templates.after]
+signup = "newsletter"
+```
+
+---
+
 ## Processing order
 
 1. **Parse TOML → JS object.** Invalid TOML throws a build error.
 2. **Update** `links.json` if any `links.*` keys present.
-3. **Template selection** – resolve `head.js`, `nav.js`, `footer.js`.
+3. **Template selection** – resolve `head.js`, `nav.js`, `header.js`, `footer.js`, and any `templates.before/*` or `templates.after/*`.
 4. **Inject CSS & scripts** – module scripts before inline scripts.
 5. **Render** assembled HTML page.
 
