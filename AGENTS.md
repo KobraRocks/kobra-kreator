@@ -13,6 +13,7 @@ This Agents.md file provides comprehensive guidance for OpenAI Codex and other A
 - `/tests`: Test files that OpenAI Codex should maintain and extend
 
 ## Coding Conventions for OpenAI Codex
+- Loging must use emojis to provide a better debugging user experience
 
 ### General Conventions for Agents.md Implementation
 
