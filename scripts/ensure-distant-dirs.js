@@ -6,7 +6,7 @@ import {
   normalize,
   resolve,
 } from "@std/path";
-import { getEmoji, logWithEmoji } from "../lib/emoji.js";
+import { logWithEmoji } from "../lib/emoji.js";
 
 /**
  * Walks each immediate subdirectory of `src/`, validates its `config.json`
@@ -27,7 +27,7 @@ async function main() {
     }
   } catch (err) {
     if (err instanceof Deno.errors.NotFound) {
-      console.warn(`${getEmoji("warning")} No src directory found.`);
+      logWithEmoji("warning", "No src directory found.");
       return;
     }
     throw err;
@@ -50,8 +50,9 @@ async function main() {
       config = JSON.parse(text);
       logWithEmoji("success", `CONFIG -- ${dirent.name} `);
     } catch (_err) {
-      console.warn(
-        `${getEmoji("error")} Skipping ${dirent.name}: cannot read config.json`,
+      logWithEmoji(
+        "warning",
+        `Skipping ${dirent.name}: cannot read config.json`,
       );
       continue;
     }
@@ -111,7 +112,7 @@ function validateConfig(config, schema) {
 
 if (import.meta.main) {
   main().catch((err) => {
-    console.error(getEmoji("error"), err);
+    logWithEmoji("error", err);
     Deno.exit(1);
   });
 }
