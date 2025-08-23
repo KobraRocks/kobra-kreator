@@ -25,7 +25,7 @@
   /* LAYOUT WIDTHS */
   --nav-desktop-width: 1200px;
   --nav-tablet-min-width: 640px;
-  --body-grid-columns: minmax(1rem, 1fr) minmax(auto, 1200px) minmax(1rem, 1fr);
+  --body-grid-columns: minmax(1rem, 1fr) minmax(auto, 768px) minmax(1rem, 1fr);
 
   /* BREAKPOINTS */
   --breakpoint-phone: 640px;
