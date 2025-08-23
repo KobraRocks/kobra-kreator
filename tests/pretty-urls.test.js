@@ -1,3 +1,7 @@
+/**
+ * Integration test verifying that pages rendered with the `prettyUrls` option
+ * omit the `.html` extension without trailing slashes.
+ */
 import { renderPage } from "../lib/render-page.js";
 import { join, toFileUrl } from "@std/path";
 
@@ -60,5 +64,5 @@ Deno.test("renderPage supports prettyUrls", async () => {
     await Deno.readTextFile(join(siteDir, "links.json")),
   );
   assertEquals(links.nav[0], { href: "/", label: "Home", topLevel: true });
-  assertEquals(links.nav[1], { href: "/about/", label: "About" });
+  assertEquals(links.nav[1], { href: "/about", label: "About" });
 });
