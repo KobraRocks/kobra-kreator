@@ -1,4 +1,5 @@
 import { marked } from "npm:marked@16";
+import { registerConverter } from "../lib/conversion-registry.js";
 
 /**
  * Convert Markdown formatted text into HTML using the `marked` library.
@@ -6,9 +7,13 @@ import { marked } from "npm:marked@16";
  * @param {string} [markdown=""] Markdown source to convert.
  * @returns {string} Generated HTML output.
  */
-export function markdownToHTML(markdown = "") {
+function markdownToHTML(markdown = "") {
   return marked.parse(markdown, {
     headerIds: false,
     mangle: false,
   });
 }
+
+registerConverter(".md", markdownToHTML);
+
+export { markdownToHTML };

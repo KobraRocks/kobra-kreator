@@ -52,7 +52,16 @@ flowchart TD
   [https://deno.land/x/deno\_dom](https://deno.land/x/deno_dom)’s `DOMParser`
   for subsequent manipulations.
 
-### 2.2 Update `links.json`
+### 2.2 Run file converters
+
+- Use `registerConverter(ext, fn)` to associate a function with a file
+  extension.
+- `convert(path, content)` looks up the converter based on the source file's
+  extension and returns the transformed HTML.
+- Built-in plugins handle Markdown (`.md`) and provide a sample JSON (`.json`)
+  conversion.
+
+### 2.3 Update `links.json`
 
 - If the page’s front‑matter contains **any** `links.*` keys, merge them into
   the site’s `links.json`.
@@ -66,7 +75,7 @@ flowchart TD
 - `links.json` is **auto‑managed**; manual edits are ignored and will be
   overwritten on the next page render.
 
-### 2.3 Apply templates
+### 2.4 Apply templates
 
 - Resolve file path: `templates/<slot>/<name>.js`.
 - Import (cached by Deno) and call `render({ frontMatter, links })`.
@@ -74,7 +83,7 @@ flowchart TD
 - For _nav_ / _footer_: returned fragment is inserted **before** the content and
   **after** it respectively.
 
-### 2.4 Inject styles & scripts
+### 2.5 Inject styles & scripts
 
 1. **CSS list** – Each entry becomes `<link rel="stylesheet" href="…">` inside
    `<head>`.
@@ -85,17 +94,17 @@ flowchart TD
 
    <!-- TODO: flag to allow `defer` scripts in head? -->
 
-### 2.5 Assemble & inline SVGs
+### 2.6 Assemble & inline SVGs
 
 - Combine head, nav, page content, footer, scripts into a DOM tree.
 - Replace each `<icon>` / `<logo>` node with SVG markup pulled from `src-svg/`.
 - Remove unused whitespace if `--minify` flag is passed.
   <!-- TODO: implement minify option -->
 
-### 2.6 Write output
+### 2.7 Write output
 
-- Compute destination: `<distantDirectory>/<relative/path/of/page>.html`
-  (Markdown sources are converted to `.html`).
+  - Compute destination: `<distantDirectory>/<relative/path/of/page>.html`
+    (all converted sources output as `.html`).
 - Ensure folders exist (`Deno.mkdir({ recursive: true })`).
 - Write file with UTF‑8 encoding.
 
