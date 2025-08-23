@@ -58,15 +58,14 @@ flowchart TD
 | Hot‑reload watch       | ✅                                    | Uses `Deno.watchFs`. Debounce strategy described in 09‑watch‑rules. |
 | Custom head/footer/nav | ✅                                    | Via template modules.                                               |
 | Arbitrary page scripts | ✅                                    | `scripts.modules` & `scripts.inline` front‑matter arrays.           |
-| Markdown pages         | ❌ | Planned. Currently HTML‑only.                                                |
+| Markdown pages         | ✅                                    | supported along side with `.html` files
 
 ---
 
 ## Roadmap ⏩
 
 1. **Plugin system** – Allow custom build steps. <!-- TODO: move to separate RFC once designed -->
-2. **Markdown → HTML converter** for blog workflows.
-3. **i18n routing** – Compile language variants per page.
+2. **i18n routing** – Compile language variants per page.
 
 ---
 
