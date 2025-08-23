@@ -2,11 +2,11 @@
 
 Templates are **plain ECMAScript modules** that can live under a site‑specific
 `/src/<domain>/templates/` directory or the shared `/templates/` directory. They
-generate reusable page fragments—`<head>`, `<nav>`, and `<footer>`—based on
-each page’s front‑matter and the site’s central `links.json`. When a template
-is missing in these locations, Kobra Kreator checks for a file with the **same
-name** under `/core/templates/`. If no matching core template exists, the build
-fails with an error.
+generate reusable page fragments—`<head>`, `<nav>`, `<footer>`—and RSS feed
+items based on each page’s front‑matter and the site’s central `links.json`.
+When a template is missing in these locations, Kobra Kreator checks for a file
+with the **same name** under `/core/templates/`. If no matching core template
+exists, the build fails with an error.
 
 > **TL;DR**: export a `render()` function that returns an HTML string.
 
@@ -22,6 +22,8 @@ fails with an error.
     default.js
   footer/
     default.js
+  feed/
+    default.js
 
 /templates/                     # shared across sites
   head/
@@ -30,11 +32,13 @@ fails with an error.
     default.js
   footer/
     default.js
+  feed/
+    default.js
 ```
 
-_The generator maps the `frontMatter.templates.X` key to
-`templates/X/<NAME>.js` within the current site, then falls back to the project
-`/templates/` directory and finally `/core/templates/`._
+_The generator maps the `frontMatter.templates.X` key to `templates/X/<NAME>.js`
+within the current site, then falls back to the project `/templates/` directory
+and finally `/core/templates/`._
 
 ---
 
@@ -124,6 +128,17 @@ export function render({ links }) {
 }
 ```
 
+### 3.4 Feed / `default.js`
+
+```javascript
+export function render({ item }) {
+  const pubDate = item.date
+    ? `<pubDate>${item.date.toUTCString()}</pubDate>`
+    : "";
+  return `<item>\n<title>${item.title}</title>\n<link>${item.link}</link>\n<description><![CDATA[${item.description}]]></description>\n${pubDate}\n</item>`;
+}
+```
+
 ---
 
 ## 4. Access to utilities (planned)
@@ -139,9 +154,10 @@ parameter or named import.
 
 - If a template **throws**, the build logs the error and halts—better fail fast
   than produce broken markup.
- - Missing template file in the site directory → loads `/templates/<slot>/<name>.js`.
- - Still missing → loads `/core/templates/<slot>/<name>.js`.
- - Missing in all locations → build fails with an error.
+- Missing template file in the site directory → loads
+  `/templates/<slot>/<name>.js`.
+- Still missing → loads `/core/templates/<slot>/<name>.js`.
+- Missing in all locations → build fails with an error.
 
 ---
 
