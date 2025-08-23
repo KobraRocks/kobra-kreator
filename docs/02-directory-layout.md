@@ -18,6 +18,7 @@ project-root/
 │  │  ├─ index.html
 │  │  ├─ index.css                       # page specific stylesheet (optional)
 │  │  ├─ styles.css                      # extra global CSS (optional)
+│  │  ├─ templates/                      # site-specific templates (optional)
 │  │  ├─ js/                             # client‑side JS modules
 │  │  │  └─ …
 │  │  ├─ blog/                           # example content section
@@ -51,9 +52,9 @@ project-root/
 
 1. **Folder == domain.** The folder name must match the domain you will deploy
    under (e.g. `my‑domain.com`). Spaces and uppercase discouraged.
-2. **Templates are global.** All sites pull from the same `/templates` pool, but
-   the folder may be omitted—matching files from `/core/templates` are used
-   instead.
+2. **Templates can be site-specific.** Each site may define its own `templates`
+   folder which overrides files in the shared `/templates` directory and finally
+   `/core/templates`.
 3. **Styles can fall back to core.** If a stylesheet referenced by a page is
    missing under the site folder, a file with the same path from `/core/css/`
    is used instead.
