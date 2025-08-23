@@ -1,8 +1,9 @@
 # 06 – Rendering Pipeline
 
 This chapter walks through **how a single page travels** from raw source file to
-finished HTML inside its `distantDirectory`. It also shows how the pipeline
-reacts to file‑system events raised by the watcher.
+finished HTML inside its `distantDirectory`. It also shows how the pipeline now
+flows through distinct `preProcess`, `assemble`, and `postProcess` stages and how
+it reacts to file‑system events raised by the watcher.
 
 > For FS event semantics, see **09-watch-rules**. For asset copying, see
 > **10-file-copy-rules**.
@@ -15,23 +16,28 @@ reacts to file‑system events raised by the watcher.
 %% TODO: replace with an SVG once the diagram is final
 %%{init: {'flowchart': {'htmlLabels': false}}}%%
 flowchart TD
-    E[FS event] --> |HTML page changed| P1[Render‑Page]
+    E[FS event] --> |HTML page changed| PRE[Pre‑Process]
     E --> |Template changed| P2[Render‑All‑Using‑Template]
     E --> |SVG in src-svg changed| P3[Render‑All‑Using‑SVG]
     E --> |Asset changed| AC[Copy File]
 
-    subgraph Rendering
-      PARSE[1. Parse front-matter & HTML]
-      LINKS[2. Update links.json]
-      HEAD[3. Apply head template]
-      NAV[4. Apply nav template]
-      FOOT[5. Apply footer template]
-      SCRIPTS[6. Inject scripts & styles]
-      ASSEMBLE[7. Stitch fragments + page content]
-      REPLACE[8. Inline <icon>/<logo>]
-      WRITE[9. Write output to distantDirectory]
-      PARSE --> LINKS --> HEAD --> NAV --> FOOT --> SCRIPTS --> ASSEMBLE --> REPLACE --> WRITE
+    PRE --> ASM[Assemble]
+    ASM --> POST[Post‑Process]
+
+    subgraph PreProcess
+      PARSE[Parse front-matter & HTML]
+      LINKS[Update links.json]
+      SCRIPTS[Inject scripts & styles]
+      PARSE --> LINKS --> SCRIPTS
     end
+
+    subgraph PostProcess
+      REPLACE[Inline <icon>/<logo>]
+      WRITE[Write output to distantDirectory]
+      REPLACE --> WRITE
+    end
+
+    ASM -.-> REPLACE
 ```
 
 ---
