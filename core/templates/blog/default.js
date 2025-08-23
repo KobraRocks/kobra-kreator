@@ -1,4 +1,4 @@
-import { markdownToHTML } from "../../../lib/markdown";
+import { markdownToHTML } from "../../../plugins/markdown.js";
 
 function generateHTMLContent(target = "/") {
     let entries = [];

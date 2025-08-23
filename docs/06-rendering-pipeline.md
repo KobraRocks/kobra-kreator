@@ -22,15 +22,16 @@ flowchart TD
 
     subgraph Rendering
       PARSE[1. Parse front-matter & HTML]
-      LINKS[2. Update links.json]
-      HEAD[3. Apply head template]
-      NAV[4. Apply nav template]
-      FOOT[5. Apply footer template]
-      SCRIPTS[6. Inject scripts & styles]
-      ASSEMBLE[7. Stitch fragments + page content]
-      REPLACE[8. Inline <icon>/<logo>]
-      WRITE[9. Write output to distantDirectory]
-      PARSE --> LINKS --> HEAD --> NAV --> FOOT --> SCRIPTS --> ASSEMBLE --> REPLACE --> WRITE
+      CONVERT[2. Run converters]
+      LINKS[3. Update links.json]
+      HEAD[4. Apply head template]
+      NAV[5. Apply nav template]
+      FOOT[6. Apply footer template]
+      SCRIPTS[7. Inject scripts & styles]
+      ASSEMBLE[8. Stitch fragments + page content]
+      REPLACE[9. Inline <icon>/<logo>]
+      WRITE[10. Write output to distantDirectory]
+      PARSE --> CONVERT --> LINKS --> HEAD --> NAV --> FOOT --> SCRIPTS --> ASSEMBLE --> REPLACE --> WRITE
     end
 ```
 
@@ -46,7 +47,16 @@ flowchart TD
   [https://deno.land/x/deno\_dom](https://deno.land/x/deno_dom)’s `DOMParser`
   for subsequent manipulations.
 
-### 2.2 Update `links.json`
+### 2.2 Run converters
+
+- Source files can register converters based on file extension.
+- Use `registerConverter(ext, fn)` to register a converter where `ext` is like
+  `.md` and `fn` receives `(path, content)`.
+- Call `convert(path, content)` to transform the raw text. If no converter is
+  found, the original string is returned.
+- Built‑in plugins under `/plugins` provide Markdown and JSON examples.
+
+### 2.3 Update `links.json`
 
 - If the page’s front‑matter contains **any** `links.*` keys, merge them into
   the site’s `links.json`.
@@ -60,7 +70,7 @@ flowchart TD
 - `links.json` is **auto‑managed**; manual edits are ignored and will be
   overwritten on the next page render.
 
-### 2.3 Apply templates
+### 2.4 Apply templates
 
 - Resolve file path: `templates/<slot>/<name>.js`.
 - Import (cached by Deno) and call `render({ frontMatter, links })`.
@@ -68,7 +78,7 @@ flowchart TD
 - For _nav_ / _footer_: returned fragment is inserted **before** the content and
   **after** it respectively.
 
-### 2.4 Inject styles & scripts
+### 2.5 Inject styles & scripts
 
 1. **CSS list** – Each entry becomes `<link rel="stylesheet" href="…">` inside
    `<head>`.
@@ -79,14 +89,14 @@ flowchart TD
 
    <!-- TODO: flag to allow `defer` scripts in head? -->
 
-### 2.5 Assemble & inline SVGs
+### 2.6 Assemble & inline SVGs
 
 - Combine head, nav, page content, footer, scripts into a DOM tree.
 - Replace each `<icon>` / `<logo>` node with SVG markup pulled from `src-svg/`.
 - Remove unused whitespace if `--minify` flag is passed.
   <!-- TODO: implement minify option -->
 
-### 2.6 Write output
+### 2.7 Write output
 
 - Compute destination: `<distantDirectory>/<relative/path/of/page>.html`
   (Markdown sources are converted to `.html`).
