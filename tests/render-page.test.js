@@ -106,7 +106,7 @@ Deno.test("renderPage renders page and updates links", async () => {
   });
 
   const depRec = pageDeps.get(pagePath);
-  assertEquals(depRec.templates.size, 3);
+  assertEquals(depRec.templates.size, 4);
   assert(depRec.svgs.has(join(siteDir, "src-svg", "ui", "check.svg")));
   assert(deps?.scriptsUsed.includes(inlineScriptPath));
   assert(depRec.scripts.has(inlineScriptPath));
