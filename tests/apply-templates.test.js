@@ -1,5 +1,6 @@
 import { applyTemplates } from "../lib/apply-templates.js";
 import { DOMParser } from "@b-fuze/deno-dom";
+import { join } from "@std/path";
 
 /**
  * Minimal equality assertion for tests.
@@ -54,7 +55,8 @@ Deno.test("applyTemplates inserts rendered fragments", async () => {
   const links = { nav: [], footer: [] };
   const config = { distantDirectory: "/tmp" };
   const root = new URL("./", import.meta.url);
-  const used = await applyTemplates(doc, page, links, config, root);
+  const siteDir = root.pathname;
+  const used = await applyTemplates(doc, page, links, config, root, siteDir);
 
   assertEquals(doc.head.innerHTML.includes("<title>Example</title>"), true);
   assertEquals(
@@ -84,7 +86,8 @@ Deno.test("applyTemplates handles document with no root element", async () => {
   const links = { nav: [], footer: [] };
   const config = { distantDirectory: "/tmp" };
   const root = new URL("./", import.meta.url);
-  await applyTemplates(doc, page, links, config, root);
+  const siteDir = root.pathname;
+  await applyTemplates(doc, page, links, config, root, siteDir);
   assertEquals(doc.head.innerHTML, "<title>Example</title>");
 
 });
@@ -102,7 +105,8 @@ Deno.test("applyTemplates falls back to core templates", async () => {
 
   // Provide a root directory without templates to trigger fallback.
   const root = new URL("./no-templates/", import.meta.url);
-  const used = await applyTemplates(doc, page, links, config, root);
+  const siteDir = root.pathname;
+  const used = await applyTemplates(doc, page, links, config, root, siteDir);
 
   assertEquals(doc.head.innerHTML.includes("<title>Example</title>"), true);
   assertEquals(
@@ -133,15 +137,16 @@ Deno.test(
     const links = { nav: [], footer: [] };
     const config = { distantDirectory: "/tmp" };
     const root = new URL("./no-templates/", import.meta.url);
+    const siteDir = root.pathname;
 
     let threw = false;
     try {
-      await applyTemplates(doc, page, links, config, root);
+      await applyTemplates(doc, page, links, config, root, siteDir);
     } catch (err) {
       threw = true;
       assertEquals(
         err.message.includes(
-          "Template head/missing.js not found in project or core directories",
+          "Template head/missing.js not found in site, project, or core directories",
         ),
         true,
       );
@@ -149,3 +154,40 @@ Deno.test(
     if (!threw) throw new Error("Expected applyTemplates to throw");
   },
 );
+
+Deno.test("applyTemplates prefers site templates over shared", async () => {
+  const doc = new StubDocument();
+
+  const frontMatter = {
+    title: "Example",
+    templates: { head: "default" },
+  };
+  const page = { frontMatter, html: "hi" };
+  const links = { nav: [], footer: [] };
+  const config = { distantDirectory: "/tmp" };
+  const root = new URL("./", import.meta.url);
+  const siteDir = await Deno.makeTempDir();
+
+  try {
+    await Deno.mkdir(join(siteDir, "templates", "head"), { recursive: true });
+    await Deno.writeTextFile(
+      join(siteDir, "templates", "head", "default.js"),
+      "export function render() { return '<meta name=\"site\" content=\"override\">'; }",
+    );
+
+    const used = await applyTemplates(doc, page, links, config, root, siteDir);
+
+    assertEquals(
+      doc.head.innerHTML.includes(
+        '<meta name="site" content="override">',
+      ),
+      true,
+    );
+    assertEquals(
+      used.includes(join(siteDir, "templates", "head", "default.js")),
+      true,
+    );
+  } finally {
+    await Deno.remove(siteDir, { recursive: true });
+  }
+});

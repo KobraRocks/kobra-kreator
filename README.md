@@ -32,7 +32,7 @@ curl -fsSL https://deno.land/install.sh | sh
 # 4 – Open `dist/` (or the path you set in each site’s config.json) in your browser
 ```
 
-> **Tip:** The first run performs a full build, then keeps watching `/src` and `/templates` for changes.
+> **Tip:** The first run performs a full build, then keeps watching `/src` (including any site templates) and `/templates` for changes.
 
 Want to work with Codex? Follow this guideline to setup environment [Codex Environement](https://github.com/KobraRocks/knowledge-base/blob/main/codex-with-deno.md)
 
@@ -62,6 +62,7 @@ The CLI performs a full build and then continues watching `src/` for changes.
 project-root/
 ├─ src/                # One sub‑folder per domain
 │  └─ my-site.com/
+│     ├─ templates/    # site‑specific head/nav/footer templates
 │     ├─ media/ …      # images/, videos/, …
 │     ├─ src-svg/ …    # raw SVG sources
 │     ├─ js/ …         # client scripts

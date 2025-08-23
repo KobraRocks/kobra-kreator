@@ -37,6 +37,9 @@ attach, which templates to render, and how to update `links.json`.
 | `[links].footer.column` | string    | ⬜       | Column bucket in `links.json.footer`.                               |
 | `[links].footer.label`  | string    | ⬜       | Link text in footer.                                                |
 
+> Template files are resolved from the site’s own `templates/` folder first,
+> then the shared `/templates/`, and finally `/core/templates/`.
+
 > **Validation** – Unknown keys log a warning but do **not** stop the build.
 > This keeps old pages working if new fields are added later.
 

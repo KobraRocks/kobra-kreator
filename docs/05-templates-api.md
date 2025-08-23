@@ -1,11 +1,12 @@
 # 05 – Templates API
 
-Templates are **plain ECMAScript modules** that live under the shared
-`/templates/` directory. They generate reusable page fragments—`<head>`,
-`<nav>`, and `<footer>`—based on each page’s front‑matter and the site’s central
-`links.json`. When these project-level templates are absent, Kobra Kreator
-checks for a template with the **same name** under `/core/templates/`. If no
-matching core template exists, the build fails with an error.
+Templates are **plain ECMAScript modules** that can live under a site‑specific
+`/src/<domain>/templates/` directory or the shared `/templates/` directory. They
+generate reusable page fragments—`<head>`, `<nav>`, and `<footer>`—based on
+each page’s front‑matter and the site’s central `links.json`. When a template
+is missing in these locations, Kobra Kreator checks for a file with the **same
+name** under `/core/templates/`. If no matching core template exists, the build
+fails with an error.
 
 > **TL;DR**: export a `render()` function that returns an HTML string.
 
@@ -14,21 +15,26 @@ matching core template exists, the build fails with an error.
 ## 1. Folder structure
 
 ```text
-/templates/
+/src/my-domain.com/templates/   # highest priority
   head/
-    default.js        # <head> content shared by most pages
-    blog.js           # <head> variant used by blog posts
+    default.js
   nav/
-    default.js        # site‑wide navigation bar
+    default.js
   footer/
-    default.js        # global footer
+    default.js
+
+/templates/                     # shared across sites
+  head/
+    default.js
+  nav/
+    default.js
+  footer/
+    default.js
 ```
 
 _The generator maps the `frontMatter.templates.X` key to
-`/templates/X/<NAME>.js`, where `X ∈ { head, nav, footer }`._
-
-If the `/templates/` directory is missing, Kobra Kreator automatically uses the
-files from `/core/templates/` with the same names for each slot.
+`templates/X/<NAME>.js` within the current site, then falls back to the project
+`/templates/` directory and finally `/core/templates/`._
 
 ---
 
@@ -133,8 +139,9 @@ parameter or named import.
 
 - If a template **throws**, the build logs the error and halts—better fail fast
   than produce broken markup.
-- Missing template file → loads `/core/templates/<slot>/<name>.js`.
-- Missing in both locations → build fails with an error.
+ - Missing template file in the site directory → loads `/templates/<slot>/<name>.js`.
+ - Still missing → loads `/core/templates/<slot>/<name>.js`.
+ - Missing in all locations → build fails with an error.
 
 ---
 
