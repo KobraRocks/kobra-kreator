@@ -17,7 +17,7 @@ export function render({ frontMatter }) {
 
   let cssLinks = "";
   for (const path of css) {
-    cssLinks += `\n<link rel="stylesheet" href="/css/${path}">`;
+    cssLinks += `\n<link rel="stylesheet" href="${path}">`;
   }
 
   return `
