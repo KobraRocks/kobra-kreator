@@ -5,7 +5,7 @@ string `#---#`. The generator parses this front‑matter to decide which assets 
 attach, which templates to render, and how to update `links.json`.
 
 ```html
-<title="My page">
+title="My page"
 #---# <-- build reads until this marker
 <html>
   … content …
