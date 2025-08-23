@@ -127,4 +127,31 @@ signup = "newsletter"
 
 ---
 
+## Front‑matter handlers
+
+Custom front‑matter keys can be processed at build time by registering a handler.
+Registered keys skip validation warnings and are exposed to handlers for further
+processing.
+
+### API
+
+```js
+import { registerFrontMatterHandler } from "../lib/front-matter-handlers.js";
+
+registerFrontMatterHandler("badge", (value, { page, siteDir }) => {
+  // value is whatever was provided in front matter
+  // modify the page or read files under siteDir as needed
+  page.frontMatter.title += ` – ${value}`;
+});
+```
+
+Handlers run during the render phase before CSS and JavaScript processing. They
+receive the raw value from front matter and a context object containing the
+`page` and `siteDir`.
+
+To remove a handler, call `registerFrontMatterHandler("badge")` without a
+function.
+
+---
+
 ### Next → [05-templates-api](05-templates-api.md)
