@@ -1,6 +1,6 @@
 # Kobra Kreator 🐍
 
-*A lightning‑fast, template‑driven static‑site generator built with **Deno***
+_A lightning‑fast, template‑driven static‑site generator built with **Deno**_
 
 ---
 
@@ -13,6 +13,7 @@
 | **Hot‑reload watcher**                   | Edits propagate instantly to your output directory        |
 | **Smart SVG tags** (`<icon>` / `<logo>`) | Drop SVGs straight into HTML and keep full CSS/JS control |
 | **TOML front‑matter & JS templates**     | Mix static content with dynamic head/nav/footer rendering |
+| **RSS feed generator**                   | Produce an automatic RSS feed for blog posts              |
 
 ---
 
@@ -32,9 +33,11 @@ curl -fsSL https://deno.land/install.sh | sh
 # 4 – Open `dist/` (or the path you set in each site’s config.json) in your browser
 ```
 
-> **Tip:** The first run performs a full build, then keeps watching `/src` (including any site templates) and `/templates` for changes.
+> **Tip:** The first run performs a full build, then keeps watching `/src`
+> (including any site templates) and `/templates` for changes.
 
-Want to work with Codex? Follow this guideline to setup environment [Codex Environement](https://github.com/KobraRocks/knowledge-base/blob/main/codex-with-deno.md)
+Want to work with Codex? Follow this guideline to setup environment
+[Codex Environement](https://github.com/KobraRocks/knowledge-base/blob/main/codex-with-deno.md)
 
 ## CLI Usage 🧰
 
@@ -44,7 +47,8 @@ Run the generator from the repository root with Deno:
 deno run -A --import-map=import_map.json main.js
 ```
 
-By default, Kobra Kreator spawns a worker for each available CPU core. You can tweak the worker pool with `--workers` (or `-w`):
+By default, Kobra Kreator spawns a worker for each available CPU core. You can
+tweak the worker pool with `--workers` (or `-w`):
 
 ```bash
 deno run -A --import-map=import_map.json main.js --workers 4
@@ -95,7 +99,8 @@ Head there for deep dives and examples.
 
 ## Tutorials 🎓
 
-- [My First Project](tutorials/my-first-project.md) – a discovery‑style walkthrough that incrementally builds a site under `/src/my-project/`.
+- [My First Project](tutorials/my-first-project.md) – a discovery‑style
+  walkthrough that incrementally builds a site under `/src/my-project/`.
 
 ---
 
@@ -112,4 +117,3 @@ Head there for deep dives and examples.
 ## License 📝
 
 Licensed under the MIT License. See [`LICENSE`](LICENSE).
-
