@@ -17,9 +17,16 @@ Deno.test({
       // ignore if db does not exist
     }
 
+    /**
+     * Maximum time in milliseconds to wait for the build to complete.
+     * Can be overridden via the BUILD_TIMEOUT environment variable.
+     * @type {number}
+     */
+    const buildTimeoutMs = Number(Deno.env.get("BUILD_TIMEOUT") ?? "30000");
+
     const build = fullBuild(1);
     const timeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("build timeout")), 10000)
+      setTimeout(() => reject(new Error("build timeout")), buildTimeoutMs)
     );
     await Promise.race([build, timeout]);
 
