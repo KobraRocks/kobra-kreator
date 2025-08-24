@@ -13,7 +13,15 @@ import { getEmoji, logWithEmoji } from "./lib/emoji.js";
  * @param {number} workers Number of workers to use.
  * @returns {Promise<void>}
  */
-async function fullBuild(workers) {
+/**
+ * Kick off a full site build and wait for all pages to render.
+ *
+ * Ensures worker task promises always settle so the caller does not hang.
+ *
+ * @param {number} workers Number of workers to use.
+ * @returns {Promise<void>}
+ */
+export async function fullBuild(workers) {
   const root = new URL("./src", import.meta.url);
   // The WorkerPool handles worker lifecycle and propagates errors so the
   // build process does not hang if a worker crashes.
@@ -39,11 +47,15 @@ async function fullBuild(workers) {
         ),
       );
     }
-    await Promise.all(tasks);
-    console.log("** Promise.all -> resolved");
+    const results = await Promise.allSettled(tasks);
+    for (const res of results) {
+      if (res.status === "rejected") {
+        throw res.reason;
+      }
+    }
   } catch (err) {
     if (!(err instanceof Deno.errors.NotFound)) throw err;
-    logWithEmoji("system", `${getEmoji("error")} BUILD -- failed: ${err}`);  
+    logWithEmoji("system", `${getEmoji("error")} BUILD -- failed: ${err}`);
   } finally {
     // Ensure all workers are terminated to avoid locking subsequent runs.
     logWithEmoji("system", `${getEmoji("success")} BUILD -- done!`)
