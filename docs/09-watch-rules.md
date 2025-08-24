@@ -70,7 +70,9 @@ any pages that include them.
 <!-- TODO: confirm whether `.ico` should trigger copy or be ignored. Current spec lists it in watch list. -->
 
 When a page or asset is **removed**, its counterpart in `distantDirectory` is
-deleted to keep the output tree in sync.
+deleted to keep the output tree in sync. Paths written to the distant
+directory are recorded in a project‑level SQLite database (`kobra.db`) so that
+removing a record also deletes the corresponding file.
 
 ---
 
