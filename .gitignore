@@ -4,3 +4,7 @@ templates/
 
 !core/templates/
 !core/templates/**
+
+kobra.db
+kobra.db-shm
+kobra.db-wal

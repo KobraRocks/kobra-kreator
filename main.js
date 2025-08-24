@@ -5,6 +5,7 @@ import { walk } from "@std/fs/walk";
 import { watch } from "./lib/watch.js";
 import { recordPageDeps } from "./lib/page-deps.js";
 import { WorkerPool } from "./lib/worker-pool.js";
+import { getEmoji, logWithEmoji } from "./lib/emoji.js";
 
 /**
  * Render all pages using a pool of workers.
@@ -29,7 +30,7 @@ async function fullBuild(workers) {
         pool.push(
           { type: "render", path: entry.path },
           [
-            (e) => {
+            function handleDeps (e) {
               if (e.data.deps) {
                 recordPageDeps(e.data.deps);
               }
@@ -39,10 +40,13 @@ async function fullBuild(workers) {
       );
     }
     await Promise.all(tasks);
+    console.log("** Promise.all -> resolved");
   } catch (err) {
     if (!(err instanceof Deno.errors.NotFound)) throw err;
+    logWithEmoji("system", `${getEmoji("error")} BUILD -- failed: ${err}`);  
   } finally {
     // Ensure all workers are terminated to avoid locking subsequent runs.
+    logWithEmoji("system", `${getEmoji("success")} BUILD -- done!`)
     pool.close();
   }
 }
