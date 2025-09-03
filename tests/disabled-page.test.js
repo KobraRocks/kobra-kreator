@@ -31,9 +31,9 @@ Deno.test(
       JSON.stringify({ distantDirectory: distDir }),
     );
 
-    await Deno.mkdir(join(root, "templates", "head"), { recursive: true });
+    await Deno.mkdir(join(root, "shared", "templates", "head"), { recursive: true });
     await Deno.writeTextFile(
-      join(root, "templates", "head", "default.js"),
+      join(root, "shared", "templates", "head", "default.js"),
       "export function render() { return `<title>t</title>`; }",
     );
 

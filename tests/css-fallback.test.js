@@ -32,11 +32,11 @@ Deno.test("renderPage falls back to core css when missing", async () => {
     join(siteDir, "config.json"),
     JSON.stringify({ distantDirectory: distDir }),
   );
-  await Deno.mkdir(join(root, "templates", "head"), { recursive: true });
-  await Deno.mkdir(join(root, "templates", "nav"), { recursive: true });
-  await Deno.mkdir(join(root, "templates", "footer"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "head"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "nav"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "footer"), { recursive: true });
   await Deno.writeTextFile(
-    join(root, "templates", "head", "default.js"),
+    join(root, "shared", "templates", "head", "default.js"),
     [
       "export function render({ frontMatter }) {",
       '  const cssLinks = (frontMatter.css || []).map((href) => `<link rel=\\"stylesheet\\" href=\\"${href}\\">`).join(\"\");',
@@ -45,19 +45,19 @@ Deno.test("renderPage falls back to core css when missing", async () => {
     ].join("\n"),
   );
   await Deno.writeTextFile(
-    join(root, "templates", "nav", "default.js"),
+    join(root, "shared", "templates", "nav", "default.js"),
     "export function render(){ return `<nav></nav>`; }",
   );
   await Deno.writeTextFile(
-    join(root, "templates", "footer", "default.js"),
+    join(root, "shared", "templates", "footer", "default.js"),
     "export function render(){ return `<footer></footer>`; }",
   );
-  const pagePath = join(siteDir, "index.html");
-  const page =
-    'title = "Home"\ncss = ["styles.css"]\n[templates]\nhead = "default"\nnav = "default"\nfooter = "default"\n#---#\n<body>hi</body>';
-  await Deno.writeTextFile(pagePath, page);
-  await renderPage(pagePath, rootUrl);
-  const cssOut = join(distDir, "styles.css");
+    const pagePath = join(siteDir, "index.html");
+    const page =
+      'title = "Home"\ncss = ["css/styles.css"]\n[templates]\nhead = "default"\nnav = "default"\nfooter = "default"\n#---#\n<body>hi</body>';
+    await Deno.writeTextFile(pagePath, page);
+    await renderPage(pagePath, rootUrl);
+    const cssOut = join(distDir, "css", "styles.css");
   assert(await fileExists(cssOut));
   const outContent = await Deno.readTextFile(cssOut);
   const coreCss = fromFileUrl(new URL("../core/css/styles.css", import.meta.url));

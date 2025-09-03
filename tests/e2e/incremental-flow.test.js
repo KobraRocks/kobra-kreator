@@ -72,9 +72,9 @@ Deno.test("incremental end-to-end flow", async () => {
   );
 
   // Prepare templates
-  await Deno.mkdir(join(root, "templates", "head"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "head"), { recursive: true });
   await Deno.writeTextFile(
-    join(root, "templates", "head", "default.js"),
+    join(root, "shared", "templates", "head", "default.js"),
     [
       "export function render({ frontMatter }) {",
       '  const cssLinks = (frontMatter.css || []).map((href) => `<link rel=\\"stylesheet\\" href=\\"${href}\\">`).join(\"\");',
@@ -83,14 +83,14 @@ Deno.test("incremental end-to-end flow", async () => {
       "}",
     ].join("\n"),
   );
-  await Deno.mkdir(join(root, "templates", "nav"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "nav"), { recursive: true });
   await Deno.writeTextFile(
-    join(root, "templates", "nav", "default.js"),
+    join(root, "shared", "templates", "nav", "default.js"),
     "export function render() { return `<nav></nav>`; }",
   );
-  await Deno.mkdir(join(root, "templates", "footer"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "footer"), { recursive: true });
   await Deno.writeTextFile(
-    join(root, "templates", "footer", "default.js"),
+    join(root, "shared", "templates", "footer", "default.js"),
     "export function render() { return `<footer></footer>`; }",
   );
 
@@ -117,25 +117,26 @@ Deno.test("incremental end-to-end flow", async () => {
 
   // Step 4
   log("created source css file copied into destination folder");
-  const cssPath = join(siteDir, "styles.css");
+  await Deno.mkdir(join(siteDir, "css"), { recursive: true });
+  const cssPath = join(siteDir, "css", "styles.css");
   await Deno.writeTextFile(cssPath, "body{color:red;}");
   await copyAsset(cssPath);
-  assert(await fileExists(join(distDir, "styles.css")));
+  assert(await fileExists(join(distDir, "css", "styles.css")));
 
   // Step 5
   log("updated source html file with css link, destination file rerendered");
-  const page3 = `title = "Home"\ndescription = "My site"\ncss = ["styles.css"]\n${TPL}\n#---#\n<body>Hello</body>`;
+  const page3 = `title = "Home"\ndescription = "My site"\ncss = ["css/styles.css"]\n${TPL}\n#---#\n<body>Hello</body>`;
   await Deno.writeTextFile(pagePath, page3);
   deps = await renderPage(pagePath, rootUrl);
   if (deps) recordPageDeps(deps);
   html = await Deno.readTextFile(join(distDir, "index.html"));
-  assert(html.includes("styles.css"));
+  assert(html.includes("css/styles.css"));
 
   // Step 6
   log(
     "added nav links to source html file, destination file rerendered and links.json created",
   );
-  const page4 = `title = "Home"\ndescription = "My site"\ncss = ["styles.css"]\n${TPL}\n[links.nav]\nlabel = "Home"\n#---#\n<body>Hello</body>`;
+  const page4 = `title = "Home"\ndescription = "My site"\ncss = ["css/styles.css"]\n${TPL}\n[links.nav]\nlabel = "Home"\n#---#\n<body>Hello</body>`;
   await Deno.writeTextFile(pagePath, page4);
   deps = await renderPage(pagePath, rootUrl);
   if (deps) recordPageDeps(deps);
@@ -147,7 +148,7 @@ Deno.test("incremental end-to-end flow", async () => {
   log(
     "added footer links to source html file, destination file rerendered and links.json updated",
   );
-  const page5 = `title = "Home"\ndescription = "My site"\ncss = ["styles.css"]\n${TPL}\n[links.nav]\nlabel = "Home"\n[links.footer]\nlabel = "Docs"\n#---#\n<body>Hello</body>`;
+  const page5 = `title = "Home"\ndescription = "My site"\ncss = ["css/styles.css"]\n${TPL}\n[links.nav]\nlabel = "Home"\n[links.footer]\nlabel = "Docs"\n#---#\n<body>Hello</body>`;
   await Deno.writeTextFile(pagePath, page5);
   deps = await renderPage(pagePath, rootUrl);
   if (deps) recordPageDeps(deps);
@@ -163,7 +164,7 @@ Deno.test("incremental end-to-end flow", async () => {
 
   // Step 9
   log("added source inline script to html file, destination file rerendered");
-  const page6 = `title = "Home"\ndescription = "My site"\ncss = ["styles.css"]\n[scripts]\ninline = ["inline.inline.js"]\n${TPL}\n[links.nav]\nlabel = "Home"\n[links.footer]\nlabel = "Docs"\n#---#\n<body>Hello</body>`;
+  const page6 = `title = "Home"\ndescription = "My site"\ncss = ["css/styles.css"]\n[scripts]\ninline = ["inline.inline.js"]\n${TPL}\n[links.nav]\nlabel = "Home"\n[links.footer]\nlabel = "Docs"\n#---#\n<body>Hello</body>`;
   await Deno.writeTextFile(pagePath, page6);
   deps = await renderPage(pagePath, rootUrl);
   if (deps) recordPageDeps(deps);
@@ -184,7 +185,7 @@ Deno.test("incremental end-to-end flow", async () => {
 
   // Step 11
   log("added source javascript module to html file, destination file rerendered");
-  const page7 = `title = "Home"\ndescription = "My site"\ncss = ["styles.css"]\n[scripts]\ninline = ["inline.inline.js"]\nmodules = ["/js/app.js"]\n${TPL}\n[links.nav]\nlabel = "Home"\n[links.footer]\nlabel = "Docs"\n#---#\n<body>Hello</body>`;
+  const page7 = `title = "Home"\ndescription = "My site"\ncss = ["css/styles.css"]\n[scripts]\ninline = ["inline.inline.js"]\nmodules = ["/js/app.js"]\n${TPL}\n[links.nav]\nlabel = "Home"\n[links.footer]\nlabel = "Docs"\n#---#\n<body>Hello</body>`;
   await Deno.writeTextFile(pagePath, page7);
   deps = await renderPage(pagePath, rootUrl);
   if (deps) recordPageDeps(deps);
@@ -202,7 +203,7 @@ Deno.test("incremental end-to-end flow", async () => {
 
   // Step 13
   log("added <icon src=\"file.svg\"></icon> to html file, destination file rerendered");
-  const page8 = `title = "Home"\ndescription = "My site"\ncss = ["styles.css"]\n[scripts]\ninline = ["inline.inline.js"]\nmodules = ["/js/app.js"]\n${TPL}\n[links.nav]\nlabel = "Home"\n[links.footer]\nlabel = "Docs"\n#---#\n<body><icon src="file.svg"></icon></body>`;
+  const page8 = `title = "Home"\ndescription = "My site"\ncss = ["css/styles.css"]\n[scripts]\ninline = ["inline.inline.js"]\nmodules = ["/js/app.js"]\n${TPL}\n[links.nav]\nlabel = "Home"\n[links.footer]\nlabel = "Docs"\n#---#\n<body><icon src="file.svg"></icon></body>`;
   await Deno.writeTextFile(pagePath, page8);
   deps = await renderPage(pagePath, rootUrl);
   if (deps) recordPageDeps(deps);
@@ -212,7 +213,7 @@ Deno.test("incremental end-to-end flow", async () => {
 
   // Step 14
   log("added <logo src=\"file.svg\"></logo> to html file, destination file rerendered");
-  const page9 = `title = "Home"\ndescription = "My site"\ncss = ["styles.css"]\n[scripts]\ninline = ["inline.inline.js"]\nmodules = ["/js/app.js"]\n${TPL}\n[links.nav]\nlabel = "Home"\n[links.footer]\nlabel = "Docs"\n#---#\n<body><icon src="file.svg"></icon><logo src="file.svg"></logo></body>`;
+  const page9 = `title = "Home"\ndescription = "My site"\ncss = ["css/styles.css"]\n[scripts]\ninline = ["inline.inline.js"]\nmodules = ["/js/app.js"]\n${TPL}\n[links.nav]\nlabel = "Home"\n[links.footer]\nlabel = "Docs"\n#---#\n<body><icon src="file.svg"></icon><logo src="file.svg"></logo></body>`;
   await Deno.writeTextFile(pagePath, page9);
   deps = await renderPage(pagePath, rootUrl);
   if (deps) recordPageDeps(deps);

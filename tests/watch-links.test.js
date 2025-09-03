@@ -25,14 +25,14 @@ Deno.test(
       JSON.stringify({ distantDirectory: distDir }),
     );
 
-    await Deno.mkdir(join(rootDir, "templates", "head"), { recursive: true });
+    await Deno.mkdir(join(rootDir, "shared", "templates", "head"), { recursive: true });
     await Deno.writeTextFile(
-      join(rootDir, "templates", "head", "default.js"),
+      join(rootDir, "shared", "templates", "head", "default.js"),
       "export function render() { return `<title>Watch</title>`; }",
     );
-    await Deno.mkdir(join(rootDir, "templates", "nav"), { recursive: true });
+    await Deno.mkdir(join(rootDir, "shared", "templates", "nav"), { recursive: true });
     await Deno.writeTextFile(
-      join(rootDir, "templates", "nav", "default.js"),
+      join(rootDir, "shared", "templates", "nav", "default.js"),
       "export function render({ links }) { return `<nav>${links.nav.map(l=>l.label).join(',')}</nav>`; }",
     );
 
