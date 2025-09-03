@@ -53,7 +53,7 @@ export async function fullBuild(workers) {
         throw res.reason;
       }
     }
-  } catch (err) {
+} catch (err) {
     if (!(err instanceof Deno.errors.NotFound)) throw err;
     logWithEmoji("system", `${getEmoji("error")} BUILD -- failed: ${err}`);
   } finally {
@@ -68,7 +68,7 @@ if (import.meta.main) {
     string: ["workers"],
     alias: { w: "workers" },
     default: {
-      workers: String(navigator.hardwareConcurrency ?? 2),
+      workers: String(navigator.hardwareConcurrency ?? 6),
     },
   });
   const workers = Number(flags.workers);
