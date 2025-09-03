@@ -24,7 +24,7 @@ Deno.test({
      */
     const buildTimeoutMs = Number(Deno.env.get("BUILD_TIMEOUT") ?? "30000");
 
-    const build = fullBuild(1);
+    const build = fullBuild();
     const timeout = new Promise((_, reject) =>
       setTimeout(() => reject(new Error("build timeout")), buildTimeoutMs)
     );
