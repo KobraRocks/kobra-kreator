@@ -39,21 +39,27 @@ Deno.test("blog pages render with blog template and other templates", async () =
   );
 
   // Shared templates for head, nav, and footer
-  await Deno.mkdir(join(root, "templates", "head"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "head"), {
+    recursive: true,
+  });
   await Deno.writeTextFile(
-    join(root, "templates", "head", "default.js"),
+    join(root, "shared", "templates", "head", "default.js"),
     "export function render({ frontMatter }) { return `<title>${frontMatter.title}</title>`; }",
   );
 
-  await Deno.mkdir(join(root, "templates", "nav"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "nav"), {
+    recursive: true,
+  });
   await Deno.writeTextFile(
-    join(root, "templates", "nav", "default.js"),
+    join(root, "shared", "templates", "nav", "default.js"),
     "export function render() { return `<nav>Nav</nav>`; }",
   );
 
-  await Deno.mkdir(join(root, "templates", "footer"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "footer"), {
+    recursive: true,
+  });
   await Deno.writeTextFile(
-    join(root, "templates", "footer", "default.js"),
+    join(root, "shared", "templates", "footer", "default.js"),
     "export function render() { return `<footer>Footer</footer>`; }",
   );
 

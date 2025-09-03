@@ -45,8 +45,8 @@ Deno.test(
     let html = await Deno.readTextFile(outPath);
     assert(html.includes("<title>Core</title>"));
 
-    const tplPath = join(rootDir, "templates", "head", "default.js");
-    await Deno.mkdir(join(rootDir, "templates", "head"), { recursive: true });
+    const tplPath = join(rootDir, "shared", "templates", "head", "default.js");
+    await Deno.mkdir(join(rootDir, "shared", "templates", "head"), { recursive: true });
     await Deno.writeTextFile(
       tplPath,
       "export function render() { return `<title>Override</title>`; }",

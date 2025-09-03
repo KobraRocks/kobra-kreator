@@ -22,19 +22,19 @@ Deno.test("renderPage supports prettyUrls", async () => {
   await Deno.mkdir(siteDir, { recursive: true });
   await Deno.mkdir(distDir, { recursive: true });
 
-  await Deno.mkdir(join(root, "templates", "head"), { recursive: true });
-  await Deno.mkdir(join(root, "templates", "nav"), { recursive: true });
-  await Deno.mkdir(join(root, "templates", "footer"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "head"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "nav"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "footer"), { recursive: true });
   await Deno.writeTextFile(
-    join(root, "templates", "head", "default.js"),
+    join(root, "shared", "templates", "head", "default.js"),
     "export function render() { return `<title></title>`; }",
   );
   await Deno.writeTextFile(
-    join(root, "templates", "nav", "default.js"),
+    join(root, "shared", "templates", "nav", "default.js"),
     "export function render() { return ``; }",
   );
   await Deno.writeTextFile(
-    join(root, "templates", "footer", "default.js"),
+    join(root, "shared", "templates", "footer", "default.js"),
     "export function render() { return ``; }",
   );
 

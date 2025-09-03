@@ -55,9 +55,9 @@ Deno.test({
       JSON.stringify({ distantDirectory: distDir, hashAssets: true }),
     );
 
-    await Deno.mkdir(join(root, "templates", "head"), { recursive: true });
+    await Deno.mkdir(join(root, "shared", "templates", "head"), { recursive: true });
     await Deno.writeTextFile(
-      join(root, "templates", "head", "default.js"),
+      join(root, "shared", "templates", "head", "default.js"),
       [
         "export function render({ frontMatter }) {",
         '  const cssLinks = (frontMatter.css || []).map((href) => `<link rel=\\"stylesheet\\" href=\\"${href}\\">`).join(\'\');',
@@ -66,7 +66,8 @@ Deno.test({
       ].join("\n"),
     );
 
-    const cssPath = join(siteDir, "styles.css");
+    await Deno.mkdir(join(siteDir, "css"), { recursive: true });
+    const cssPath = join(siteDir, "css", "styles.css");
     await Deno.writeTextFile(cssPath, "body{color:red;}");
     const jsDir = join(siteDir, "js");
     await Deno.mkdir(jsDir, { recursive: true });
@@ -78,7 +79,7 @@ Deno.test({
     const pagePath = join(siteDir, "index.html");
     const page = [
       'title = "Watch"',
-      'css = ["styles.css"]',
+      'css = ["css/styles.css"]',
       "[scripts]",
       'modules = ["/js/app.js"]',
       "[templates]",
@@ -142,10 +143,10 @@ Deno.test({
     assert(!html.includes(cssHash1));
     assert(!html.includes(jsHash1));
 
-    const cssOutOld = join(distDir, cssHash1);
-    const jsOutOld = join(distDir, "js", jsHash1);
-    const cssOutNew = join(distDir, cssHash2);
-    const jsOutNew = join(distDir, "js", jsHash2);
+      const cssOutOld = join(distDir, "css", cssHash1);
+      const jsOutOld = join(distDir, "js", jsHash1);
+      const cssOutNew = join(distDir, "css", cssHash2);
+      const jsOutNew = join(distDir, "js", jsHash2);
     assert(!(await fileExists(cssOutOld)));
     assert(!(await fileExists(jsOutOld)));
     assert(await fileExists(cssOutNew));

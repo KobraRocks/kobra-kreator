@@ -39,12 +39,16 @@ Deno.test("renderPage renders page and updates links", async () => {
     "<svg><path/></svg>",
   );
 
-  await Deno.mkdir(join(root, "templates", "head"), { recursive: true });
-  await Deno.mkdir(join(root, "templates", "nav"), { recursive: true });
-  await Deno.mkdir(join(root, "templates", "footer"), { recursive: true });
-  await Deno.mkdir(join(root, "templates", "head"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "head"), {
+    recursive: true,
+  });
+  await Deno.mkdir(join(root, "shared", "templates", "nav"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "footer"), {
+    recursive: true,
+  });
+  await Deno.mkdir(join(root, "shared", "templates", "head"), { recursive: true });
   await Deno.writeTextFile(
-    join(root, "templates", "head", "default.js"),
+    join(root, "shared", "templates", "head", "default.js"),
     [
       "export function render({ frontMatter }) {",
       '  const cssLinks = (frontMatter.css || []).map((href) => `<link rel=\\"stylesheet\\" href=\\"${href}\\">`).join(\'\');',
@@ -52,21 +56,21 @@ Deno.test("renderPage renders page and updates links", async () => {
       "}",
     ].join("\n"),
   );
-  await Deno.mkdir(join(root, "templates", "nav"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "nav"), { recursive: true });
   await Deno.writeTextFile(
-    join(root, "templates", "nav", "default.js"),
+    join(root, "shared", "templates", "nav", "default.js"),
     "export function render() { return `<nav>nav</nav>`; }",
   );
-  await Deno.mkdir(join(root, "templates", "footer"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "footer"), { recursive: true });
   await Deno.writeTextFile(
-    join(root, "templates", "footer", "default.js"),
+    join(root, "shared", "templates", "footer", "default.js"),
     "export function render() { return `<footer>foot</footer>`; }",
   );
 
   await Deno.mkdir(join(siteDir, "blog"), { recursive: true });
   const pagePath = join(siteDir, "blog", "index.html");
   const page =
-    `title = "Hello"\ncss = ["styles.css"]\n[scripts]\nmodules = ["/js/app.js"]\ninline = ["inline.inline.js"]\n[templates]\nhead = "default"\nnav = "default"\nfooter = "default"\n[links.nav]\ntopLevel = true\nlabel = "Home"\n#---#\n<body><icon src="ui/check.svg"></icon></body>`;
+    `title = "Hello"\ncss = ["css/styles.css"]\n[scripts]\nmodules = ["/js/app.js"]\ninline = ["inline.inline.js"]\n[templates]\nhead = "default"\nnav = "default"\nfooter = "default"\n[links.nav]\ntopLevel = true\nlabel = "Home"\n#---#\n<body><icon src="ui/check.svg"></icon></body>`;
   await Deno.writeTextFile(pagePath, page);
 
   const deps = await renderPage(pagePath, rootUrl);
@@ -83,7 +87,7 @@ Deno.test("renderPage renders page and updates links", async () => {
   assert(doc.querySelector("footer")?.textContent === "foot");
   const links = doc.querySelectorAll('link[rel="stylesheet"]');
   assertEquals(links.length, 1);
-  assert(links[0].getAttribute("href") === "styles.css");
+  assert(links[0].getAttribute("href") === "css/styles.css");
   assert(
     doc.querySelector('script[type="module"][src="/js/app.js"]'),
   );
@@ -125,13 +129,14 @@ Deno.test("renderPage hashes asset references when enabled", async () => {
     join(siteDir, "config.json"),
     JSON.stringify({ distantDirectory: distDir, hashAssets: true }),
   );
-  await Deno.writeTextFile(join(siteDir, "styles.css"), "body{}");
+  await Deno.mkdir(join(siteDir, "css"), { recursive: true });
+  await Deno.writeTextFile(join(siteDir, "css", "styles.css"), "body{}");
   await Deno.mkdir(join(siteDir, "js"), { recursive: true });
   await Deno.writeTextFile(join(siteDir, "js", "app.js"), "console.log('hi')");
 
-  await Deno.mkdir(join(root, "templates", "head"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "head"), { recursive: true });
   await Deno.writeTextFile(
-    join(root, "templates", "head", "default.js"),
+    join(root, "shared", "templates", "head", "default.js"),
     [
       "export function render({ frontMatter }) {",
       '  const cssLinks = (frontMatter.css || []).map((href) => `<link rel=\\"stylesheet\\" href=\\"${href}\\">`).join(\'\');',
@@ -139,33 +144,34 @@ Deno.test("renderPage hashes asset references when enabled", async () => {
       "}",
     ].join("\n"),
   );
-  await Deno.mkdir(join(root, "templates", "nav"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "nav"), { recursive: true });
   await Deno.writeTextFile(
-    join(root, "templates", "nav", "default.js"),
+    join(root, "shared", "templates", "nav", "default.js"),
     "export function render() { return `<nav>nav</nav>`; }",
   );
-  await Deno.mkdir(join(root, "templates", "footer"), { recursive: true });
+  await Deno.mkdir(join(root, "shared", "templates", "footer"), { recursive: true });
   await Deno.writeTextFile(
-    join(root, "templates", "footer", "default.js"),
+    join(root, "shared", "templates", "footer", "default.js"),
     "export function render() { return `<footer>foot</footer>`; }",
   );
 
   await Deno.mkdir(join(siteDir, "blog"), { recursive: true });
   const pagePath = join(siteDir, "blog", "index.html");
   const page =
-    `title = "Hello"\ncss = ["styles.css"]\n[scripts]\nmodules = ["/js/app.js"]\n[templates]\nhead = "default"\nnav = "default"\nfooter = "default"\n#---#\n<body>hi</body>`;
+    `title = "Hello"\ncss = ["css/styles.css"]\n[scripts]\nmodules = ["/js/app.js"]\n[templates]\nhead = "default"\nnav = "default"\nfooter = "default"\n#---#\n<body>hi</body>`;
   await Deno.writeTextFile(pagePath, page);
 
   await renderPage(pagePath, rootUrl);
 
-  const hashedCss = await hashAssetName(join(siteDir, "styles.css"));
-  const hashedJs = await hashAssetName(join(siteDir, "js", "app.js"));
-  const outPath = join(distDir, "blog", "index.html");
-  const html = await Deno.readTextFile(outPath);
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, "text/html");
-  assert(doc);
-  const link = doc.querySelector('link[rel="stylesheet"]');
-  assert(link?.getAttribute("href") === hashedCss);
-  assert(doc.querySelector(`script[type="module"][src="/js/${hashedJs}"]`));
+    const hashedCss = await hashAssetName(join(siteDir, "css", "styles.css"));
+    const hashedJs = await hashAssetName(join(siteDir, "js", "app.js"));
+    const outPath = join(distDir, "blog", "index.html");
+    const html = await Deno.readTextFile(outPath);
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    assert(doc);
+    const link = doc.querySelector('link[rel="stylesheet"]');
+    const expectedCss = `css/${hashedCss}`;
+    assert(link?.getAttribute("href") === expectedCss);
+    assert(doc.querySelector(`script[type="module"][src="/js/${hashedJs}"]`));
 });

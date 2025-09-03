@@ -31,9 +31,9 @@ Deno.test("watch re-renders pages when inline scripts change", async () => {
   const scriptFile = join(siteDir, "foo.inline.js");
   await Deno.writeTextFile(scriptFile, "console.log('one');");
 
-  await Deno.mkdir(join(rootDir, "templates", "head"), { recursive: true });
+  await Deno.mkdir(join(rootDir, "shared", "templates", "head"), { recursive: true });
   await Deno.writeTextFile(
-    join(rootDir, "templates", "head", "default.js"),
+    join(rootDir, "shared", "templates", "head", "default.js"),
     "export function render() { return `<title>Watch</title>`; }",
   );
 
@@ -75,5 +75,5 @@ Deno.test("watch re-renders pages when inline scripts change", async () => {
   html = await Deno.readTextFile(outPath);
   assert(html.includes('console.log("two")'));
 
-  await Deno.remove(join(rootDir, "templates"), { recursive: true });
+  await Deno.remove(join(rootDir, "shared"), { recursive: true });
 });
