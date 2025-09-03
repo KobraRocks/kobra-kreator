@@ -1,77 +1,51 @@
-// deno -A --import-map=import_map.json main.js
-
 import { parse } from "@std/flags";
 import { walk } from "@std/fs/walk";
-import { watch } from "./lib/watch.js";
+import { renderPage } from "./lib/render-page.js";
 import { recordPageDeps } from "./lib/page-deps.js";
-import { WorkerPool } from "./lib/worker-pool.js";
+import { watch } from "./lib/watch.js";
 import { getEmoji, logWithEmoji } from "./lib/emoji.js";
 
 /**
- * Render all pages using a pool of workers.
+ * Render all pages under the `/src` directory sequentially.
+ * Optionally restrict rendering to pages under a specific hostname.
  *
- * @param {number} workers Number of workers to use.
- * @returns {Promise<void>}
+ * @param {string} [hostname=""] Hostname folder to render (e.g. "example.com").
+ * @returns {Promise<void>} Resolves when the initial build completes.
  */
-/**
- * Kick off a full site build and wait for all pages to render.
- *
- * Ensures worker task promises always settle so the caller does not hang.
- *
- * @param {number} workers Number of workers to use.
- * @returns {Promise<void>}
- */
-export async function fullBuild(workers) {
+export async function fullBuild(hostname = "") {
   const root = new URL("./src", import.meta.url);
-  // The WorkerPool handles worker lifecycle and propagates errors so the
-  // build process does not hang if a worker crashes.
-  const pool = new WorkerPool(
-    new URL("./lib/worker-task.js", import.meta.url).href,
-    workers,
-  );
-  const tasks = [];
+  const target = hostname ? new URL(`./${hostname}`, root) : root;
   try {
     for await (
-      const entry of walk(root, { exts: [".html"], includeDirs: false })
+      const entry of walk(target, { includeDirs: false, exts: [".html", ".md"] })
     ) {
-      tasks.push(
-        pool.push(
-          { type: "render", path: entry.path },
-          [
-            function handleDeps (e) {
-              if (e.data.deps) {
-                recordPageDeps(e.data.deps);
-              }
-            },
-          ],
-        ),
-      );
+      const deps = await renderPage(entry.path);
+      if (deps) recordPageDeps(deps);
     }
-    const results = await Promise.allSettled(tasks);
-    for (const res of results) {
-      if (res.status === "rejected") {
-        throw res.reason;
-      }
-    }
-} catch (err) {
+    logWithEmoji("system", `${getEmoji("success")} BUILD -- done!`);
+  } catch (err) {
     if (!(err instanceof Deno.errors.NotFound)) throw err;
     logWithEmoji("system", `${getEmoji("error")} BUILD -- failed: ${err}`);
-  } finally {
-    // Ensure all workers are terminated to avoid locking subsequent runs.
-    logWithEmoji("system", `${getEmoji("success")} BUILD -- done!`)
-    pool.close();
   }
 }
 
+// #######################
+// CLI
+// #######################
+
 if (import.meta.main) {
+  /**
+   * CLI flags accepted by the build script.
+   *
+   * @type {{ hostname: string | undefined }}
+   */
   const flags = parse(Deno.args, {
-    string: ["workers"],
-    alias: { w: "workers" },
-    default: {
-      workers: String(navigator.hardwareConcurrency ?? 6),
-    },
+    string: ["hostname"],
+    alias: { h: "hostname" },
+    default: { hostname: "" },
   });
-  const workers = Number(flags.workers);
-  await fullBuild(workers);
-  await watch(workers);
+
+  const hostname = flags.hostname || "";
+  await fullBuild(hostname);
+  await watch(hostname);
 }

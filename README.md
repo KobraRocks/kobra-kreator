@@ -29,6 +29,8 @@ curl -fsSL https://deno.land/install.sh | sh
 
 # 3 – Run the generator in watch mode
  deno run -A --import-map=import_map.json main.js
+#    Restrict to a single site folder (optional)
+ deno run -A --import-map=import_map.json main.js --hostname example.com
 
 # 4 – Open `dist/` (or the path you set in each site’s config.json) in your browser
 ```
@@ -54,6 +56,14 @@ tweak the worker pool with `--workers` (or `-w`):
 deno run -A --import-map=import_map.json main.js --workers 4
 # or
 deno run -A --import-map=import_map.json main.js -w 4
+```
+
+To focus on a single hostname under `src/`, pass the `--hostname` flag:
+
+```bash
+deno run -A --import-map=import_map.json main.js --hostname example.com
+# or
+deno run -A --import-map=import_map.json main.js -h example.com
 ```
 
 The CLI performs a full build and then continues watching `src/` for changes.

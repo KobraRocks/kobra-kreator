@@ -19,6 +19,10 @@ various editors/OSes, and _which_ build or copy action runs for each change.
 > **Implementation note** – We create **one** `watchFs` subscription for each
 > root so glob patterns remain simple.
 
+> **Host-specific tip** – Running `main.js` with `--hostname my-site.com` swaps
+> the `/src/` watcher for `/src/my-site.com/`, keeping other sites idle while
+> still monitoring shared templates.
+
 ---
 
 ## 2. Raw FS events vs. logical events
